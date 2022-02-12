@@ -1,9 +1,9 @@
 <template>
     <div class="logIn logSign">
-        <div class="logSign__mainContainer">
-            <p>Le réseau social qui vous appartient !</p>
+        <div class="logSign__mainContainer mainContainer">
+            <p class="disclaimer">Le réseau social qui vous appartient !</p>
 
-            <div class="logSign__inputsContainer">
+            <div class="logSign__contentContainer contentContainer">
                 <label for="logIn__userInput">Identifiant</label>
                 <input id="logIn__userInput" class="logSignInput" type="text">
 
@@ -13,6 +13,7 @@
                 <button class="logSign__buttonMain">Connexion</button>
                 <a href="*" class="logIn__forgot">Mot de passe oublié ?</a>
             </div>
+            <div class="logIn__spaceFiller"></div>
         </div>
     </div>
 </template>
@@ -34,6 +35,9 @@ export default {
         text-decoration: none;
         color: white;
         padding-top: 1em;
+    }
+    &__spaceFiller {
+        height: 12em;
     }
 }
 </style>

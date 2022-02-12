@@ -1,9 +1,9 @@
 <template>
     <div class="signUp logSign">
-        <div class="logSign__mainContainer signUp__mainContainer">
-            <p>Inscrivez-vous en quelques secondes !</p>
+        <div class="logSign__mainContainer signUp__mainContainer mainContainer">
+            <p class="disclaimer">Inscrivez-vous en quelques secondes !</p>
 
-            <div class="logSign__inputsContainer">
+            <div class="logSign__contentContainer contentContainer">
                 <label for="signUp__nameInput">Nom</label>
                 <input id="signUp__nameInput" class="logSignInput" type="text">
 
@@ -39,7 +39,7 @@ export default {
 
 .signUp {
     &__mainContainer {
-        height: 104vh; // conserver
+        // height: 104vh; // conserver
     }
 }
 </style>

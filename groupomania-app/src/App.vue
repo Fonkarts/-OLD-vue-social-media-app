@@ -4,15 +4,18 @@
       <img class="nav__logo" alt="Logo Groupomania" src="./assets/icon-left-font-monochrome-white.svg"><br>
     <!-- </div> -->
     <router-link to="/signup">S'enregistrer</router-link> <span> | </span>
-    <router-link to="/">Se connecter</router-link>
+    <router-link to="/">Se connecter</router-link> <span> | </span>
+    <router-link to="/home">Accueil</router-link> <span> | </span>
+    <router-link to="/userprofile">Profil</router-link>
   </div>
 
   <router-view/>
 
   <div class="copyrights"> 
-    <p>Copyrights Groupomania. Fonkarts 2022.</p> 
+    <p>Copyrights Groupomania, Fonkarts 2022. Made with <img src="./assets/logo.png" alt="Logo de Vue.js" class="vueLogo"></p> 
   </div>
 </template>
+
 
 <style lang="scss">
 @import "./variables.scss";
@@ -34,7 +37,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: black;
-  height: 100vh;
   position: relative;
 }
 
@@ -58,40 +60,57 @@ body {
   & a {
     font-weight: bold;
     color: white;
-    margin: 0 5vw;
+    margin: 0 1em;
     &.router-link-exact-active {
       color: $color-secondary;
     }
   }
 }
 
-// Vues "SignUp" et "LogIn": partagent les mêmesq caractéristiques."
-.logSign { 
+.disclaimer {
+  padding: 3vw 2vw;
+  font-style: italic;
+  font-size: 0.8em;
   background-color: #333;
-
-  &__mainContainer {
-    @include gradient-main;
-    border-top: 0.2em solid white;
-    height: 83vh;
+  color: white;
+  width: 17em;
+  margin: 1em auto;
+  border-radius: 0.9em;
+  border: 0.15em solid white;
+  @include desktop-only {
+    padding: 1vw 0;
   }
-
-  & p {
-    padding: 5vw 2vw;
-    font-style: italic;
-    @include desktop-only {
-      padding: 1vw 0;
-    }
-    @include inter-only {
-    padding: 2vw 0;
-    }
+  @include inter-only {
+  padding: 2vw 0;
   }
+}
 
-  &__inputsContainer {
+h2 {
+  margin: 0 auto 0.5em auto;
+  color: $color-secondary;
+}
+
+.mainContainer { // Englobe le contenu entre le nav et le footer.
+  border-top: 0.2em solid white;
+  padding-bottom: 5em;
+}
+
+.contentContainer {
     background-color:  #333;
     color: white;
     border: 0.15em solid white;
     border-radius: 1.5em;
-    margin: 8vw auto;
+}
+
+.logSign { // Concerne les Vues "SignUp" et "LogIn"
+  background-color: #333;
+
+  &__mainContainer {
+    @include gradient-main;
+  }
+
+  &__contentContainer {
+    margin: 3vw auto;
     padding: 3vw 0;
     max-width: 18em;
     @include desktop-only {
@@ -135,7 +154,7 @@ body {
   }
 
   & label {
-    border-bottom: 0.2vw solid $color-secondary;
+    border-bottom: 0.1em solid $color-secondary;
   }
 
   &__buttonMain {
@@ -146,12 +165,19 @@ body {
 .copyrights {
   margin: 0 auto;
   bottom:0;
+  position: fixed;
+  width: 100%;
   background-color: #333;
-  padding: 1em;
+  padding: 1em 0;
   max-height: 3em;
+  border-top: 0.15em solid white;
   & p {
     font-size: 0.8em;
     color: white;
+  }
+  .vueLogo {
+    width: 0.8em;
+    height: 0.8em;
   }
 }
 </style>
