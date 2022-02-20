@@ -38,6 +38,7 @@ body {
   text-align: center;
   color: black;
   position: relative;
+
 }
 
 .nav {
@@ -93,6 +94,7 @@ h2 {
 .mainContainer { // Englobe le contenu entre le nav et le footer.
   border-top: 0.2em solid white;
   padding-bottom: 5em;
+  min-height: 70vh;
 }
 
 .contentContainer {
@@ -100,6 +102,19 @@ h2 {
     color: white;
     border: 0.15em solid white;
     border-radius: 1.5em;
+}
+
+.successMsg,
+.failMsg {
+    font-size: 0.8em;
+    margin-top: 0;
+}
+.successMsg {
+    
+    color: rgb(149, 241, 188);
+}
+.failMsg {
+    color: rgb(238, 103, 103);
 }
 
 .logSign { // Concerne les Vues "SignUp" et "LogIn"
@@ -125,13 +140,7 @@ h2 {
   }
 
   & input, label {
-    margin: 2vw auto 6vw auto;
-      @include desktop-only {
-      margin: 0.7vw auto;
-    }
-    @include inter-only {
-        margin: 2vw auto 3vw auto;
-    }
+    margin: 0.4em auto 0.2em auto;
   }
 
   & input {

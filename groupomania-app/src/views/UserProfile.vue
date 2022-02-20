@@ -3,7 +3,7 @@
         <div class="mainContainer">
             <p class="disclaimer">Voici votre page de profil depuis laquelle vous pouvez vérifier/modifier vos informations.</p>
             
-            <div class="contentContainer logSign__contentContainer">
+            <div class="contentContainer logSign__contentContainer userProfile__contentContainer">
                 <h2>Vos Informations</h2>
 
                 <div class="userProfile__photoContainer">
@@ -25,6 +25,10 @@
 <style lang="scss" scoped>
 
 .userProfile {
+    
+    &__contentContainer {
+        max-width: 20em;
+    }
     &__photoContainer {
       width: 100%;
       overflow: hidden;

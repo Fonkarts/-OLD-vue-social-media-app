@@ -5,12 +5,12 @@
 
             <div class="logSign__contentContainer contentContainer">
                 <label for="logIn__userInput">Identifiant</label>
-                <input id="logIn__userInput" class="logSignInput" type="text">
+                <input v-model="username" id="logIn__nameInput" class="logSignInput" type="text">
 
                 <label for="logIn__passwordInput">Mot de Passe</label>
-                <input id="logIn__passwordInput" class="logSignInput" type="text">
+                <input v-model="password" id="logIn__passwordInput" class="logSignInput" type="text">
 
-                <button class="logSign__buttonMain">Connexion</button>
+                <button class="logSign__buttonMain" @click="sendLogInData()">Connexion</button>
                 <a href="*" class="logIn__forgot">Mot de passe oublié ?</a>
             </div>
             <div class="logIn__spaceFiller"></div>
@@ -19,11 +19,30 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   name: 'LogIn',
-//   component: {
-
-//   }
+  data: function () {
+      return {
+        username: "",
+        password: "",
+      }
+  },
+  methods: {
+    sendLogInData: function() {     
+        axios.post("http://localhost:3000/api/auth/login", {
+            username: this.username,
+            password: this.password
+        })
+        .then(() => {
+            window.location.replace("/#/home");
+        })
+        .catch(error => { 
+            console.log(error);
+            alert("Veuillez vérifier tous les champs du formulaire ;)");
+        });
+        }
+    }
 }
 </script>
 
@@ -35,9 +54,6 @@ export default {
         text-decoration: none;
         color: white;
         padding-top: 1em;
-    }
-    &__spaceFiller {
-        height: 12em;
     }
 }
 </style>
