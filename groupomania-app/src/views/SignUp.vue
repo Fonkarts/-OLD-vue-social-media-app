@@ -5,7 +5,7 @@
 
             <div class="logSign__contentContainer contentContainer">
                 <label for="signUp__nameInput">Nom</label>
-                <input v-model="username" @change="nameCheck()" id="signUp__nameInput" class="logSignInput" type="text">
+                <input v-model="username" @change="nameCheck" id="signUp__nameInput" class="logSignInput" type="text">
                 <p :class="{successMsg : usernameChecked, failMsg: !usernameChecked}"></p>
 
                 <label for="signUp__mailInput">Adresse e-mail</label>
@@ -31,6 +31,8 @@
 
 <script>
 import axios from "axios"
+// import { mapState} from "vuex"
+// import { mapActions } from "vuex"
 export default {
     name: 'SignUp',
     data: function() {
@@ -44,7 +46,6 @@ export default {
             emailChecked: "",
             pwChecked: "",
             confirmPwChecked: "",
-            // allFieldsChecked: "",
         }
     },
     methods: {
@@ -52,10 +53,11 @@ export default {
             let userNameInput = document.querySelector("#signUp__nameInput");
             let textRegex = new RegExp("^((([A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+[ | -]{1}[A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+)+)|([A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+))$", "g", "i");
             if(textRegex.test(this.username)) {
-                userNameInput.nextElementSibling.innerText= "Nom Valide";
+                userNameInput.nextElementSibling.innerText= "Nom valide";
+                console.log(this.username);
                 this.usernameChecked = true;
             } else {
-                userNameInput.nextElementSibling.innerText= "Nom Invalide";
+                userNameInput.nextElementSibling.innerText= "Nom invalide";
                 this.usernameChecked = false;
             }
         },
@@ -99,7 +101,8 @@ export default {
                     password: this.password
                 })
                 .then(() => {
-                    window.location.replace("/#/home");
+                    alert("Votre compte a bien été créé, utilisez maintenant vos identifiants pour vous connecter !")
+                    window.location.replace("/#/")
                 })
                 .catch(error => { console.log(error) });
             } else {

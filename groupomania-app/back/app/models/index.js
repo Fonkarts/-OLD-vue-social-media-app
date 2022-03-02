@@ -23,12 +23,23 @@ db.role.belongsToMany(db.user, {
     through: "user_roles",
     foreignKey: "roleId",
     otherKey: "userId"
-  });
-  db.user.belongsToMany(db.role, {
-    through: "user_roles",
-    foreignKey: "userId",
-    otherKey: "roleId"
-  });
-  db.ROLES = ["user", "admin", "moderator"];
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
+});
+db.article.belongsToMany(db.user, {
+  through: "user_articles",
+  foreignKey: "articleId",
+  otherKey: "userId"
+});
+db.user.belongsToMany(db.article, {
+through: "user_articles",
+foreignKey: "userId",
+otherKey: "articleId"
+});
+
+db.ROLES = ["user", "admin", "moderator"];
 
 module.exports = db;

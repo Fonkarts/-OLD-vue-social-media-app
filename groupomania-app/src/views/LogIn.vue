@@ -25,7 +25,7 @@ export default {
   data: function () {
       return {
         username: "",
-        password: "",
+        password: ""
       }
   },
   methods: {
@@ -35,14 +35,16 @@ export default {
             password: this.password
         })
         .then(() => {
-            window.location.replace("/#/home");
+            localStorage.setItem("userStatus", "Online");
+            this.$emit("user-incoming", this.username )
+            window.location.replace("/#/home")
         })
         .catch(error => { 
             console.log(error);
-            alert("Veuillez vérifier tous les champs du formulaire ;)");
+            alert("Veuillez vérifier tous les champs du formulaire ;)")
         });
-        }
     }
+  }
 }
 </script>
 

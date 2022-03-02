@@ -19,10 +19,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         likes: { 
-            type: Sequelize.INTEGER, default: 0
+            type: Sequelize.INTEGER, 
+            defaultValue: 0,
+            allowNull: false
         },
         dislikes: {
-            type: Sequelize.INTEGER, default: 0
+            type: Sequelize.INTEGER, 
+            defaultValue: 0,
+            allowNull: false
         }
         // FAIRE TABLE INTERMEDIAIRE POUR LISTE UTILISATEURS LIKED ET DISLIKED !
     });

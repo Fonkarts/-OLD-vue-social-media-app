@@ -3,18 +3,30 @@ const controller = require("../controllers/userController");
 
 module.exports = function(app) {
   app.get(
-    "/api/test/user",
+    "/api/users/user",
     [authJwt.verifyToken],
     controller.userBoard
   );
   app.get(
-    "/api/test/mod",
+    "/api/users/mod",
     [authJwt.verifyToken, authJwt.isModerator],
     controller.moderatorBoard
   );
   app.get(
-    "/api/test/admin",
+    "/api/users/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+  app.get(
+    "/api/users/:id",
+    [authJwt.verifyToken],
+    controller.getUser
+  );
+  app.get(
+    "/api/users",
+    [authJwt.verifyToken],
+    controller.getAllUsers
+  );
 };
+
+

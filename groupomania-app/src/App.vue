@@ -1,21 +1,65 @@
 <template>
-  <div id="nav" class="nav">
-    <!-- <div class="nav__logoContainer"> -->
+  
+    <div id="nav" class="nav" >
+
       <img class="nav__logo" alt="Logo Groupomania" src="./assets/icon-left-font-monochrome-white.svg"><br>
-    <!-- </div> -->
-    <router-link to="/signup">S'enregistrer</router-link> <span> | </span>
-    <router-link to="/">Se connecter</router-link> <span> | </span>
-    <router-link to="/home">Accueil</router-link> <span> | </span>
-    <router-link to="/userprofile">Profil</router-link>
+
+      <router-link v-if="!this.userIsLogged" to="/signup">Créer un compte</router-link> 
+      <span v-if="!this.userIsLogged"> | </span>
+      <router-link v-if="!this.userIsLogged" to="/">Se connecter</router-link>
+
+      <router-link v-if="this.userIsLogged" to="/home">Accueil</router-link> 
+      <span v-if="this.userIsLogged"> | </span>
+      <router-link v-if="this.userIsLogged" to="/userprofile">Profil</router-link>
+      <span v-if="this.userIsLogged"> | </span>
+      <router-link v-if="this.userIsLogged" @click="userIsLoggingOut()" to="/">Se déconnecter</router-link>
   </div>
 
-  <router-view/>
+  <router-view @user-incoming="userStatusCheck" :username="username"/>
+<!-- CONFIGURER USERNAME ET UTILISER VALEUR POUR POST ARTICLE-->
 
   <div class="copyrights"> 
     <p>Copyrights Groupomania, Fonkarts 2022. Made with <img src="./assets/logo.png" alt="Logo de Vue.js" class="vueLogo"></p> 
   </div>
 </template>
 
+<script>
+// import axios from "axios"
+export default {
+  name: "App",
+  data: function () {
+    return {
+      userIsLogged: "",
+      username: ""
+    }
+  },
+
+  methods: {
+    userStatusCheck(res) {
+      this.username = res;
+      console.log(this.username);
+      if(localStorage.getItem("userStatus") === "Online") {
+        this.userIsLogged = true;
+      } else {
+        this.userIsLogged = false;
+      }
+    },
+    userIsLoggingOut() {
+      localStorage.setItem("userStatus", "Offline");
+      this.userIsLogged = false;
+      window.location.replace("/#/");
+    }
+  },
+  mounted() {
+    if(localStorage.getItem("userStatus") === "Online") {
+      this.userIsLogged = true;
+    } else if (localStorage.getItem("userStatus") === "Offline") {
+      this.userIsLogged = false;
+    }
+  }
+}
+
+</script>
 
 <style lang="scss">
 @import "./variables.scss";
@@ -87,8 +131,17 @@ body {
 }
 
 h2 {
+  font-size: 1.1em;
+  font-family: $font-primary;
   margin: 0 auto 0.5em auto;
-  color: $color-secondary;
+  padding: 0.2em 0.2em 0.4em 0.2em;
+  color: white;
+  width: 47vw;
+  max-width: 7em;
+}
+
+.home__title {
+  border-bottom: 0.1em solid white;
 }
 
 .mainContainer { // Englobe le contenu entre le nav et le footer.
@@ -117,6 +170,29 @@ h2 {
     color: rgb(238, 103, 103);
 }
 
+input, label {
+  margin: 0.4em auto 0.2em auto;
+}
+
+input {
+  display: block;
+  width: 13em;
+  height: 1.35em;
+  border-radius: 0.5em;
+  max-width: 14em;
+  max-height: 1.4em;
+  font-size: 1em;
+  font-family: $font-primary;
+  text-align: center;
+  padding: 0.35em;
+  @include desktop-only {
+      padding: 0.35vw 0.6vw;
+  }
+  @include inter-only {
+      padding: 0.5vw 1vw;
+  }
+}
+
 .logSign { // Concerne les Vues "SignUp" et "LogIn"
   background-color: #333;
 
@@ -139,37 +215,15 @@ h2 {
     }
   }
 
-  & input, label {
-    margin: 0.4em auto 0.2em auto;
-  }
-
-  & input {
-    display: block;
-    width: 13em;
-    height: 1.35em;
-    border-radius: 0.5em;
-    max-width: 14em;
-    max-height: 1.4em;
-    font-size: 1em;
-    font-family: $font-primary;
-    text-align: center;
-    padding: 0.35em;
-    @include desktop-only {
-        padding: 0.35vw 0.6vw;
-    }
-    @include inter-only {
-        padding: 0.5vw 1vw;
-    }
-  }
-
-  & label {
-    border-bottom: 0.1em solid $color-secondary;
-  }
-
   &__buttonMain {
     @include button-main;
   }
+  & label {
+    border-bottom: 0.1em solid $color-secondary;
+  }
 }
+
+
 
 .copyrights {
   margin: 0 auto;

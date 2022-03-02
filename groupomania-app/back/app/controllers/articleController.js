@@ -1,5 +1,6 @@
 const db = require("../models");
 const Article = db.article;
+const User = db.user;
 const fs = require("fs");
 // const Op = db.Sequelize.Op;
 
@@ -12,12 +13,27 @@ exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans
         ...JSON.parse(req.body.article),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
     } : /*Si non: */ {...req.body};
-    Article.create(articleObject)
-    .then(() => {
-        res.status(201).json(articleObject);
-        res.send({message: "Article créé !"});
-    })
-    .catch(error => res.status(500).json({error}))
+        Article.create(articleObject)
+        .then(article => {
+            User.findOne({where: {username: req.body.userId}})
+            .then(user => {
+                article.setUsers(user);
+                res.status(201).json(articleObject);
+                // res.send({user});
+                // res.send({message: "Article créé !"});
+            })
+            // User.findAll({where: {username: {[Op.or]: req.body.username}
+            // }})
+            // .then(user => {
+            //   article.setUser(user)
+            //   .then(() => {
+            //     res.status(200).json(articleObject);
+            //     console.log(user);
+            //     res.send({message: "Article créé !"});
+            //   });
+            // });
+        })
+    .catch(error => res.status(500).json({ error }))
 };
 
 // Met à jour les informations d'un article (UPDATE)

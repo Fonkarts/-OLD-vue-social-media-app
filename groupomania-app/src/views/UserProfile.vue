@@ -11,7 +11,7 @@
                 </div>
                 <button class="photoChangeButton">Modifier votre photo de profil</button>
 
-                <p class="userProfile__name">Nom/Prénom: (userName)</p>
+                <p class="userProfile__name" :username="username">Nom/Prénom: {{ username }}</p>
                 <p class="userProfile__mail">Adresse e-mail: (userMail)</p>
                 <p class="userProfile__job">Poste occupé: (userJob)</p>
                 <br>
@@ -21,6 +21,17 @@
     </div>
 
 </template>
+
+
+<script>
+export default {
+    props: {
+        username: String
+    },
+
+}
+</script>
+
 
 <style lang="scss" scoped>
 

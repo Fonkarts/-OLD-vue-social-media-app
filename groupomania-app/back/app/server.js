@@ -6,7 +6,7 @@ const app = express();
 const corsOptions = {
   origin: "http://localhost:8080", 
   methods: "GET, POST, PUT, DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content, Accept, Content-Type, x-access-token"
+  allowedHeaders: "Origin, X-Requested-With, Content, Accept, Content-Type, x-access-token, Authorization"
 };
 
 app.use(cors(corsOptions));
@@ -27,11 +27,11 @@ require("./routes/articleRoutes")(app);
 const db = require("./models");
 const Role = db.role; // >> !!!!!!!!!!!!! ANY !!!!!!!!!!!!!!!!!!! CHECK !!
 db.sequelize.sync(
-  {force: true})
-  .then(() => {
-  console.log("Drop et re-sync BDD");
-  initial();
-  }
+  // {force: true})
+  // .then(() => {
+  // console.log("Drop et re-sync BDD");
+  // initial();
+  // }
 );
 
 function initial() {
