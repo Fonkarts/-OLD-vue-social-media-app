@@ -24,11 +24,12 @@
 </template>
 
 <script>
-// import axios from "axios"
+import axios from "axios"
 export default {
   name: "App",
   data: function () {
     return {
+      accessToken: "",
       userIsLogged: "",
       username: ""
     }
@@ -36,8 +37,10 @@ export default {
 
   methods: {
     userStatusCheck(res) {
-      this.username = res;
-      console.log(this.username);
+      console.log(res);
+      this.accessToken = res.userToken;
+      this.username = res.userName;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`
       if(localStorage.getItem("userStatus") === "Online") {
         this.userIsLogged = true;
       } else {
@@ -46,17 +49,47 @@ export default {
     },
     userIsLoggingOut() {
       localStorage.setItem("userStatus", "Offline");
+      localStorage.removeItem("userId");
       this.userIsLogged = false;
       window.location.replace("/#/");
     }
   },
   mounted() {
+    
     if(localStorage.getItem("userStatus") === "Online") {
       this.userIsLogged = true;
     } else if (localStorage.getItem("userStatus") === "Offline") {
       this.userIsLogged = false;
     }
-  }
+    if(localStorage.getItem("temp").length > 1) {
+      this.accessToken = localStorage.getItem("temp");
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`;
+    } else {
+      console.log("temp vide");
+    }
+    // if(localStorage.getItem("userId")>=1) {
+    //   let storedUserId = localStorage.getItem("userId");
+    //   axios.get("http://localhost:3000/api/users/" + storedUserId)
+    //   .then(res => {
+    //     this.username = res.data.username;
+    //     console.log("COUCOU !");
+    //   })
+    // }
+  },
+  updated() {
+    if(localStorage.getItem("userId")>=1) {
+      let storedUserId = localStorage.getItem("userId");
+      axios.get("http://localhost:3000/api/users/" + storedUserId)
+      .then(res => {
+        this.username = res.data.username;
+        // console.log("COUCOU !");
+      })
+    }
+  },
+  beforeUpdate() {
+    localStorage.setItem("temp", this.accessToken);
+  },
+
 }
 
 </script>

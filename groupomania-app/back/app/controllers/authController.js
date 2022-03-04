@@ -54,6 +54,7 @@ exports.signUp = (req, res) => {
             config.secret, 
             {expiresIn: "24h"}
           );
+        // req.headers.authorization = token;
         let authorities = [];
         user.getRoles()
         .then(roles => {
@@ -66,7 +67,6 @@ exports.signUp = (req, res) => {
             email: user.email,
             roles: authorities,
             accessToken: token,
-            // userHasToken: true
           });
         });
       })

@@ -19,12 +19,12 @@ module.exports = function(app) {
   );
   app.get(
     "/api/users/:id",
-    [authJwt.verifyToken],
+    // [authJwt.verifyToken],
     controller.getUser
   );
   app.get(
     "/api/users",
-    [authJwt.verifyToken],
+    // [authJwt.verifyToken],
     controller.getAllUsers
   );
 };

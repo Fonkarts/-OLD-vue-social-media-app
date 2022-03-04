@@ -2,7 +2,7 @@
 // const router = express.Router();
 
 // const articleCtrl = require("../controllers/articleController");
-// const auth = require("../middlewares/authJwt");
+// const {auth} = require("../middlewares/authJwt");
 // const multer = require("../config/multerConfig");
 
 // router.get("/", auth, articleCtrl.getAllArticles);
@@ -21,16 +21,17 @@ const auth = require("../middlewares/authJwt");
 module.exports = app => {
     const articles = require("../controllers/articleController.js");
     let router = require("express").Router();
+
     // Create a new Tutorial
-    router.post("/", articles.createArticle);
+    router.post("/", auth.verifyToken, articles.createArticle);
     // Retrieve all Tutorials
-    router.get("/", articles.getAllArticles);
+    router.get("/", auth.verifyToken, articles.getAllArticles);
     // Retrieve a single Tutorial with id
-    router.get("/:id", articles.getOneArticle);
+    router.get("/:id", auth.verifyToken, articles.getOneArticle);
     // // Update a Tutorial with id
-    router.put("/:id", articles.modifyArticle);
+    router.put("/:id", auth.verifyToken, articles.modifyArticle);
     // Delete a Tutorial with id
-    router.delete("/:id", articles.deleteArticle);
+    router.delete("/:id", auth.verifyToken, articles.deleteArticle);
 
     app.use('/api/articles', router);
   };

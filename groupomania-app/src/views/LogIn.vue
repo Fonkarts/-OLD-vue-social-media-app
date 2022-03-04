@@ -34,9 +34,16 @@ export default {
             username: this.username,
             password: this.password
         })
-        .then(() => {
+        .then(res => {
+            let userId = res.data.id;
+            let userName = res.data.username;
+            let userToken = res.data.accessToken;
             localStorage.setItem("userStatus", "Online");
-            this.$emit("user-incoming", this.username )
+            localStorage.setItem("userId", userId);
+            this.$emit("user-incoming", {
+                userName,
+                userToken
+            })
             window.location.replace("/#/home")
         })
         .catch(error => { 

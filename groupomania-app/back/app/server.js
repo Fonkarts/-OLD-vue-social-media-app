@@ -5,8 +5,8 @@ const path = require("path");
 const app = express();
 const corsOptions = {
   origin: "http://localhost:8080", 
-  methods: "GET, POST, PUT, DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content, Accept, Content-Type, x-access-token, Authorization"
+  methods: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+  allowedHeaders: "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
 };
 
 app.use(cors(corsOptions));
@@ -54,4 +54,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Ce serveur fonctionne sur le port ${PORT}.`);
 });
+
+
+
 

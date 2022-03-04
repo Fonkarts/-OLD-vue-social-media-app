@@ -18,7 +18,7 @@ exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans
             User.findOne({where: {username: req.body.userId}})
             .then(user => {
                 article.setUsers(user);
-                res.status(201).json(articleObject);
+                res.status(201).json(articleObject + user);
                 // res.send({user});
                 // res.send({message: "Article créé !"});
             })
@@ -43,7 +43,7 @@ exports.modifyArticle = (req, res) => {
         if(!article) { // Si l'article n'existe pas...
             return res.status(404).json({message: "Article non trouvé !"});
         }
-        if(article.userId !== req.auth.userId) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
+        if(req.body.username !== User.username) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
         const ArticleObject = req.file ? // La requête contient-elle un fichier ?
@@ -63,19 +63,22 @@ exports.deleteArticle = (req, res) => {
     Article.findOne({id: req.params.id})
     .then(article => {
         if(!article) { // Si l'article n'existe pas...
+            console.log("TEST1");
             return res.status(404).json({message: "Article non trouvé !"});
         };
-        if(article.userId !== req.auth.userId) { // Si la requête n'est pas envoyée par la personne ayant créé la sauce...
+        if(article.userId != req.body.username) { // Si la requête n'est pas envoyée par la personne ayant créé la sauce...
+            console.log("TEST2");
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
         Article.findOne({id: req.params.id})
         .then(article => {
-            const filename = article.imageUrl.split("/images/")[1];
-            // Récupération du nom du fichier
+            console.log("TEST3");
+            const filename = article.imageUrl.split("/images/")[1]; // Récupération du nom du fichier
             fs.unlink(`images/${filename}`, () => { // Supprime le fichier du stockage.
-                Article.destroy({ _id: req.params.id}) 
-                .then(() => res.status(200).json({message: "Sauce supprimée !"}))
-                .catch(error => res.status(400).json({error}));
+                console.log("TEST4");
+                Article.destroy({where: {id: req.params.id}}) 
+                .then(() => res.status(200).json({message: "Article supprimé !"}))
+                .catch(() => res.status(400).json({message: "ICI"}));
             });
         })
     })
