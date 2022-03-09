@@ -37,6 +37,7 @@
 
         <article class="article articlesOnly">
           <h3 class="article__title"></h3>
+          <p class="article__author"></p>
         
           <div class="article__photoContainer">
             <img class="article__photo" src="">
@@ -60,19 +61,12 @@
           </button> 
 
           <div class="article__commentsSection">
-            <button class="article__displayCommentsButton" @click="deployCommentsContainer()">Afficher les commentaires</button>
-            <div v-if="userReadsComments" class="article__readCommentsSection">
-
-              <div class="article__comment">
-                <h4 class="article__commentTitle">Jean a écrit :</h4>
-                <p class="article__commentText">Ouala c'est trop cool d'écrire des commentaires !! :p</p>
-              </div>
-
+            <button class="article__displayCommentsButton">Afficher les commentaires</button>
+            <div class="article__readCommentsSection"> 
             </div>
 
           <textarea type="text" class="input article__writeCommentSection" placeholder="Écrivez un commentaire..."></textarea>
-          <button class="article__confirmCommentButton home__confirmNewArticleButton">Envoyer</button>
-          <!-- <button v-if="userIsAuthenticated" class="deleteArticleButton" @click="deleteArticle($event)">Supprimer cet article</button> -->
+          <button class="article__sendCommentButton home__confirmNewArticleButton">Envoyer</button>
           <button class="deleteArticleButton">Supprimer cet article</button>
 
           </div>
@@ -94,25 +88,36 @@ export default {
     return {
       userCreatesNewArticle: false,
       showNewArticlePhoto: false,
-      userReadsComments : false,
-      userIsAuthenticated: true,
-      article: {
-        id: "",
-        title: "",
-        description:" ",
-        imageUrl: "",
-        likes: "",
-        dislikes: "",
-        userId: ""
-      },
+      userReadsComments: false,
+      userModifiesComment: false,
+
+      // newComment: "",
       newArticle: {
         title: "",
         description: "",
         imageUrl: "",
-        likes: "",
-        dislikes: "",
+        // likes: "",
+        // dislikes: "",
         userId: ""
+      },
+      article: {
+        id: "",
+        title: "",
+        description: "",
+        imageUrl: "",
+        // likes: "",
+        // dislikes: "",
+        userId: ""
+      },
+      comment: {
+        id: "",
+        text: "",
+        userId: "",
+        articleId: "",
+        likes: "",
+        dislikes: ""
       }
+
     }
   },
   props: {
@@ -125,15 +130,6 @@ export default {
         this.userCreatesNewArticle = true;
       } else if(this.userCreatesNewArticle == true) {
         this.userCreatesNewArticle = false;
-      }
-    },
-    deployCommentsContainer() {
-      if(this.userReadsComments == false) {
-        this.userReadsComments = true;
-        document.querySelector(".article__displayCommentsButton").textContent = "Fermer les commentaires";
-      } else if(this.userReadsComments == true) {
-        this.userReadsComments = false;
-        document.querySelector(".article__displayCommentsButton").textContent = "Afficher les commentaires";
       }
     },
     getFileName() {
@@ -159,10 +155,169 @@ export default {
       })
       .catch(error => console.log(error));
     },
+    displayCommentsContainer() {
+      let currentDisplayCommentsButton = event.target;
+      let currentArticleId = event.target.closest(".article").getAttribute("id");
+      let currentCommentsSection = event.target.nextElementSibling;
+      currentCommentsSection.setAttribute("id", "cs" + currentArticleId);
+      if(this.userReadsComments == false) {
+        axios.get("http://localhost:3000/api/comments/" + currentArticleId)
+        .then(res => {
+          for(let i=0; i<res.data.length; i++) {
+            // Création du conteneur du commentaire
+            let currentComment = document.createElement("div");
+            currentCommentsSection.appendChild(currentComment);
+            currentComment.className = "article__comment";
+            currentComment.setAttribute("id", res.data[i].id)
+
+            currentComment.style.border = "0.1em solid #FF5F6D";
+            currentComment.style.borderRadius = "0.5em";
+            currentComment.style.textAlign = "left";
+            currentComment.style.padding = "0.4em";
+            currentComment.style.margin = "0.2em 0";
+
+            // Création du "titre" du commentaire
+            let currentCommentAuthor = document.createElement("h4");
+            currentComment.appendChild(currentCommentAuthor);
+            currentCommentAuthor.className = "article__commentAuthor";
+            currentCommentAuthor.innerHTML = res.data[i].userId + " a écrit : ";
+
+            currentCommentAuthor.style.margin = "0.1em 0";
+
+            // Création du contenu du commentaire
+            let currentCommentText = document.createElement("p");
+            currentComment.appendChild(currentCommentText);
+            currentCommentText.className = "article__commentText";
+            currentCommentText.innerHTML = res.data[i].text;
+
+            currentCommentText.style.margin = "0 0 0.4em 0";
+
+            if(res.data[i].userId == this.username) {
+            // Création du bouton de suppression du commentaire
+            
+              let deleteCommentButton = document.createElement("button");
+              currentComment.appendChild(deleteCommentButton);
+              deleteCommentButton.className = "article__deleteCommentButton commentButtons";
+              deleteCommentButton.innerHTML = "Supprimer";
+              deleteCommentButton.addEventListener("click", this.deleteComment);
+
+              deleteCommentButton.style.fontSize = "0.8em";
+              deleteCommentButton.style.fontWeight = "bold";
+              deleteCommentButton.style.fontFamily = "Roboto Condensed";
+              deleteCommentButton.style.width = "auto";
+              deleteCommentButton.style.height = "auto";
+              deleteCommentButton.style.color = "black";
+              deleteCommentButton.style.backgroundColor = "#f7db80";
+              deleteCommentButton.style.border = "0.1 em black solid";
+              deleteCommentButton.style.borderRadius = "0.7em";
+              deleteCommentButton.style.cursor = "pointer";
+
+            // Création du bouton de modification du commentaire
+              let modifyCommentButton = document.createElement("button");
+              currentComment.appendChild(modifyCommentButton);
+              modifyCommentButton.className = "article__modifyCommentButton commentButtons";
+              modifyCommentButton.innerHTML = "Modifier";
+              modifyCommentButton.addEventListener("click", this.modifyComment);
+
+              modifyCommentButton.style.fontSize = "0.8em";
+              modifyCommentButton.style.fontWeight = "bold";
+              modifyCommentButton.style.fontFamily = "Roboto Condensed";
+              modifyCommentButton.style.width = "auto";
+              modifyCommentButton.style.height = "auto";
+              modifyCommentButton.style.color = "black";
+              modifyCommentButton.style.backgroundColor = "#f7db80";
+              modifyCommentButton.style.border = "0.1 em black solid";
+              modifyCommentButton.style.borderRadius = "0.7em";
+              modifyCommentButton.style.cursor = "pointer";
+            }
+
+          }
+        })
+        .catch(error => console.log(error));
+        this.userReadsComments = true;
+        currentCommentsSection.style.display = "block";
+        currentDisplayCommentsButton.innerHTML = "Fermer les commentaires";
+      } 
+      else if(this.userReadsComments == true) {
+        this.userReadsComments = false;
+        currentCommentsSection.style.display = "none";
+        currentDisplayCommentsButton.innerHTML = "Afficher les commentaires";
+        document.getElementById("cs" + currentArticleId).innerHTML = " ";
+      }
+    },
+    modifyComment(event) {
+      if(this.userModifiesComment == false) {
+        this.userModifiesComment = true;
+        let modifyCommentInput = document.createElement("input");
+        let currentComment = event.target.closest(".article__comment");
+        let currentCommentId = currentComment.getAttribute("id");
+        currentComment.appendChild(modifyCommentInput);
+        modifyCommentInput.style.textAlign = "left";
+        modifyCommentInput.style.width = "50vw";
+        modifyCommentInput.style.minWidth = "8em";
+        modifyCommentInput.style.maxWidth = "20em";
+
+        let confirmCommentModificationButton = document.createElement("button");
+        currentComment.appendChild(confirmCommentModificationButton);
+        // confirmCommentModificationButton.setAttribute("class", ".commentButtons");
+        confirmCommentModificationButton.innerHTML = "Envoyer";
+
+        // let commentButtons = document.querySelectorAll(".commentButtons");
+        confirmCommentModificationButton.style.fontSize = "0.8em";
+        confirmCommentModificationButton.style.fontWeight = "bold";
+        confirmCommentModificationButton.style.fontFamily = "Roboto Condensed";
+        confirmCommentModificationButton.style.width = "auto";
+        confirmCommentModificationButton.style.height = "auto";
+        confirmCommentModificationButton.style.color = "black";
+        confirmCommentModificationButton.style.backgroundColor = "#f7db80";
+        confirmCommentModificationButton.style.border = "0.1 em black solid";
+        confirmCommentModificationButton.style.borderRadius = "0.7em";
+        confirmCommentModificationButton.style.cursor = "pointer";
+        let username = this.username;
+        const reloadPage= () => {this.$router.go(this.$router.currentRoute)};
+
+        confirmCommentModificationButton.addEventListener("click", function() {
+          if(modifyCommentInput.value != "") {
+            axios.put("http://localhost:3000/api/comments/" + currentCommentId, {data:{
+              username: username,
+              text: modifyCommentInput.value
+              }})
+              .then(() => {
+                  reloadPage();
+                  
+                })
+              .catch(error => console.log(error));
+          }
+        })
+      }
+    },
+    deleteComment(event) {
+      let currentCommentId = event.target.closest(".article__comment").getAttribute("id");
+      axios.delete("http://localhost:3000/api/comments/" + currentCommentId, {data:{
+        username: this.username
+        }})
+       .then(() => {
+          this.$router.go(this.$router.currentRoute)
+        })
+      .catch(error => console.log(error));    
+    },
+    sendComment(event) {
+      if(this.newComment != "") {
+        this.comment.articleId =  event.target.closest(".article").getAttribute("id");
+        this.comment.text = event.target.previousElementSibling.value;
+        this.comment.userId = this.username;
+        axios.post("http://localhost:3000/api/comments", this.comment)
+        .then(() => {
+          this.$router.go(this.$router.currentRoute)
+        })
+        .catch(error => console.log(error));
+      } else {
+        alert("Votre commentaire ne peut pas être vide !");
+      }
+    },
     deleteArticle(event) {
-      let currentButtonId = event.target.getAttribute("id");
-      
-      axios.delete("http://localhost:3000/api/articles/" + currentButtonId,{data: {username: this.username}})
+      let currentArticleId = event.target.closest(".article").getAttribute("id");
+      axios.delete("http://localhost:3000/api/articles/" + currentArticleId,{data: {username: this.username}})
        .then(() => {
           this.$router.go(this.$router.currentRoute)
         })
@@ -170,6 +325,7 @@ export default {
     }
   },
   mounted() {
+        
     document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
     axios.get("http://localhost:3000/api/articles")
     .then(res => {
@@ -182,12 +338,19 @@ export default {
           // Création d'articles supplémentaires selon le nombre de produits sélectionnés (article pré-existant dans HTML conservé, d'où n=1)
         }
         for(let i=0; i < res.data.length; i++) {
-
+          // Attribution d'un articleId correspondant à l'id de l'article dans le BDD
+          // let articles = document.querySelectorAll(".articlesOnly")[i];
+          
+          document.querySelectorAll(".articlesOnly")[i].setAttribute("id", res.data[i].id);
+          // Titre et description de l'article
           this.article.title = res.data[i].title;
           document.querySelectorAll(".article__title")[i].textContent = this.article.title;
+          this.article.userId = res.data[i].userId;
+          document.querySelectorAll(".article__author")[i].textContent = " publié par " + this.article.userId;
           this.article.description = res.data[i].description;
           document.querySelectorAll(".article__description")[i].textContent = this.article.description;
           
+          // Affichage de la photo de l'article
           let articlePhoto = document.querySelectorAll(".article__photo");
           this.article.imageUrl = res.data[i].imageUrl;
           if(res.data[i].imageUrl === "") {
@@ -195,23 +358,40 @@ export default {
           } else {
             articlePhoto[i].setAttribute("src", "http://localhost:3000/images/" + this.article.imageUrl);
           }
+          
+          // Bouton d'affichage des commentaires
+          const displayCommentsButton = document.querySelectorAll(".article__displayCommentsButton");
+          displayCommentsButton[i].setAttribute("id", "displayCommentButton" + res.data[i].id);
+          displayCommentsButton[i].addEventListener("click", this.displayCommentsContainer);
+          
+          // // Bouton de modification du commentaire
+          // const modifyCommentButton = document.querySelectorAll(".article__modifyCommentButton");
+          // modifyCommentButton[i].setAttribute("id", "modifyCommentButton" + res.data[i].id);
+          // modifyCommentButton[i].addEventListener("click", this.modifyComment);
+          // if(res.data[i].userId != this.username) {
+          //   modifyCommentButton[i].style.display = "none";
+          // }
 
-          document.querySelectorAll(".articlesOnly")[i].setAttribute("id", res.data[i].id);
+          // Bouton d'envoi des commentaires
+          const sendCommentButton = document.querySelectorAll(".article__sendCommentButton");
+          sendCommentButton[i].setAttribute("id", "sendCommentButton" + res.data[i].id);
+          sendCommentButton[i].addEventListener("click", this.sendComment);
+
+          // Bouton de suppression de l'article
+          
           const deleteButtons = document.querySelectorAll(".deleteArticleButton");
-          deleteButtons[i].setAttribute("id", res.data[i].id);
+          deleteButtons[i].setAttribute("id", "deleteButton" + res.data[i].id);
           deleteButtons[i].addEventListener("click", this.deleteArticle);
           if(res.data[i].userId != this.username) {
             deleteButtons[i].style.display = "none";
-          }
-
+          } 
         }
       }
     })
     .catch(error => console.log(error));
+  }, 
 
-  },
   updated() {    
-    console.log(this.username);
     document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
   }
 }
@@ -323,7 +503,11 @@ export default {
       max-width: 28em;
     }
     & h3 {
-      margin: 0 auto 0.5em auto;
+      margin: 0 auto 0.1em auto;
+    }
+    &__author {
+      font-size: 0.8em;
+      margin: 0.1em 0 0.2em 0;
     }
     &__photoContainer {
       @include full-width;
@@ -354,10 +538,11 @@ export default {
       max-width: 12em;
       height: 1.5em;
       font-size: 0.8em;
+      // background-color: rgb(76, 212, 149);
     }
     &__readCommentsSection {
       font-family: $font-primary;
-      font-size: 1em;
+      font-size: 0.9em;
       color: black;
       width: 65vw;
       min-width: 9em;
@@ -367,24 +552,8 @@ export default {
       padding: 0.4em;
       margin: 0 auto;
       border-radius: 0.4em;
+      display: none;
     }
-    &__comment {
-      @include full-width;
-      text-align: left;
-      padding: 0.4em;
-      border-radius: 0.2em;
-      border: 0.1em solid $color-primary;
-      background-color: white;
-      &Title {
-        font-size: 0.9em;
-        margin: 0.1em 0;
-      }
-      &Text {
-        font-size: 0.9em;
-        margin: 0;
-      }
-    }
-
     &__writeCommentSection {
       font-family: $font-primary;
       font-size: 1em;
@@ -402,10 +571,6 @@ export default {
         max-width: 23em;
       }
     }
-    // &__confirmCommentButton {
-    //   @include button-secondary;
-    //   width: 6em;
-    // }
   }
 }
 </style>

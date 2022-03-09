@@ -48,14 +48,13 @@ export default {
       }
     },
     userIsLoggingOut() {
-      localStorage.setItem("userStatus", "Offline");
-      localStorage.removeItem("userId");
+      localStorage.clear();
       this.userIsLogged = false;
       window.location.replace("/#/");
     }
   },
   mounted() {
-    
+    // CONDITION ONLINE !!!!
     if(localStorage.getItem("userStatus") === "Online") {
       this.userIsLogged = true;
     } else if (localStorage.getItem("userStatus") === "Offline") {
@@ -67,22 +66,21 @@ export default {
     } else {
       console.log("temp vide");
     }
-    // if(localStorage.getItem("userId")>=1) {
-    //   let storedUserId = localStorage.getItem("userId");
-    //   axios.get("http://localhost:3000/api/users/" + storedUserId)
-    //   .then(res => {
-    //     this.username = res.data.username;
-    //     console.log("COUCOU !");
-    //   })
-    // }
-  },
-  updated() {
     if(localStorage.getItem("userId")>=1) {
       let storedUserId = localStorage.getItem("userId");
       axios.get("http://localhost:3000/api/users/" + storedUserId)
       .then(res => {
         this.username = res.data.username;
-        // console.log("COUCOU !");
+      })
+    }
+  },
+  updated() {
+    // CONDITION ONLINE !!!!
+    if(localStorage.getItem("userId")>=1) {
+      let storedUserId = localStorage.getItem("userId");
+      axios.get("http://localhost:3000/api/users/" + storedUserId)
+      .then(res => {
+        this.username = res.data.username;
       })
     }
   },

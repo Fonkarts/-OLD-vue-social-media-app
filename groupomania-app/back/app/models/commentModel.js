@@ -1,22 +1,19 @@
 module.exports = (sequelize, Sequelize) => {
-    const Article = sequelize.define("articles", {
+    const Comment = sequelize.define("comments", {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false
+            notNull: true
         },
-        title: {
-            type: Sequelize.STRING
-        },
-        description: {
+        text: {
             type: Sequelize.STRING(500)
-        },
-        imageUrl: {
-            type: Sequelize.STRING
         },
         userId: {
             type: Sequelize.STRING
+        },
+        articleId: {
+            type: Sequelize.INTEGER
         },
         likes: { 
             type: Sequelize.INTEGER, 
@@ -28,7 +25,6 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 0,
             allowNull: false
         }
-        // FAIRE TABLE INTERMEDIAIRE POUR LISTE UTILISATEURS LIKED ET DISLIKED !
     });
-    return Article;
+    return Comment;
 };

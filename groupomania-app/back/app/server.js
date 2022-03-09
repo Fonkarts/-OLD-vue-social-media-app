@@ -23,6 +23,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 require('./routes/authRoutes')(app);
 require('./routes/userRoutes')(app);
 require("./routes/articleRoutes")(app);
+require("./routes/commentRoutes")(app);
 
 const db = require("./models");
 const Role = db.role; // >> !!!!!!!!!!!!! ANY !!!!!!!!!!!!!!!!!!! CHECK !!

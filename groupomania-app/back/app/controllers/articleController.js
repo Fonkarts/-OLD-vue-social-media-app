@@ -22,6 +22,7 @@ exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans
                 // res.send({user});
                 // res.send({message: "Article créé !"});
             })
+            .catch(error => res.status(400).json({ error }));
             // User.findAll({where: {username: {[Op.or]: req.body.username}
             // }})
             // .then(user => {
@@ -33,7 +34,7 @@ exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans
             //   });
             // });
         })
-    .catch(error => res.status(500).json({ error }))
+    .catch(error => res.status(500).json({ error }));
 };
 
 // Met à jour les informations d'un article (UPDATE)
@@ -43,7 +44,7 @@ exports.modifyArticle = (req, res) => {
         if(!article) { // Si l'article n'existe pas...
             return res.status(404).json({message: "Article non trouvé !"});
         }
-        if(req.body.username !== User.username) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
+        if(article.userId !== req.body.username) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
         const ArticleObject = req.file ? // La requête contient-elle un fichier ?
@@ -60,6 +61,7 @@ exports.modifyArticle = (req, res) => {
 
 // Supprime un article grâce à son ID (DELETE)
 exports.deleteArticle = (req, res) => {
+    console.log("TEST3");
     Article.findOne({id: req.params.id})
     .then(article => {
         if(!article) { // Si l'article n'existe pas...
