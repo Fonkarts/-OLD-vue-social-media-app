@@ -32,13 +32,13 @@ exports.createComment = (req, res) => { // PENSER à faire vérifs required dans
 
 // Met à jour les informations d'un commentaire (UPDATE)
 exports.modifyComment = (req, res) => {
-    Comment.findOne({id: req.params.id})
+    Comment.findOne({where: {id: req.params.id}})
     .then(comment => {
-        console.log("TEST2");
         if(!comment) { // Si le commentaire n'existe pas...
             return res.status(404).json({message: "Commentaire non trouvé !"});
         }
         if(comment.userId != req.body.data.username) { // Si la requête n'est pas envoyée par la personne ayant posté le commentaire...
+            
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
         Comment.update(req.body.data, {where: {id: req.params.id}})
@@ -50,25 +50,24 @@ exports.modifyComment = (req, res) => {
 
 // Supprime un commentaire grâce à son ID (DELETE)
 exports.deleteComment = (req, res) => {
-    Comment.findOne({id: req.params.id})
+    Comment.findOne({where: {id: req.params.id}})
     .then(comment => {
         if(!comment) { // Si le commentaire n'existe pas...
-            console.log("TEST1");
             return res.status(404).json({message: "Commentaire non trouvé !"});
         };
         if(comment.userId != req.body.username) { // Si la requête n'est pas envoyée par la personne ayant créé la sauce...
-            console.log("TEST2");
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
         Comment.destroy({where: {id: req.params.id}}) 
         .then(() => res.status(200).json({message: "Commentaire supprimé !"}))
         .catch(error => res.status(400).json({error}));
-    });
+    })
+    .catch(error => res.status(400).json({error}));
 };
 
 // Renvoie un commentaire par son ID (GET)
 exports.getOneComment = (req, res) => {
-    Comment.findOne({id: req.params.id}) 
+    Comment.findOne({where: {id: req.params.id}}) 
     .then(comment => res.status(200).json(comment))
     .catch(error => res.status(404).json({error}));
 };
@@ -79,11 +78,3 @@ exports.getAllCommentsFromAnArticle = (req, res) => {
     .then((comments) => res.status(200).json(comments))
     .catch(error => res.status(400).json({error}));
 };
-
-// exports.getAllComments = (req, res) => {
-//     Comment.findAll()  
-//     // Comment.findAll({where: {articleId: req.params.id}})  
-
-//     .then((comments) => res.status(200).json(comments))
-//     .catch(error => res.status(400).json({error}));
-// };

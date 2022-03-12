@@ -39,21 +39,21 @@ exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans
 
 // Met à jour les informations d'un article (UPDATE)
 exports.modifyArticle = (req, res) => {
-    Article.findOne({id: req.params.id})
+    Article.findOne({where: {id: req.params.id}})
     .then(article => {
         if(!article) { // Si l'article n'existe pas...
             return res.status(404).json({message: "Article non trouvé !"});
         }
-        if(article.userId !== req.body.username) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
+        if(article.userId != req.body.data.username) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
         const ArticleObject = req.file ? // La requête contient-elle un fichier ?
         // Si oui:
         {
-            ...JSON.parse(req.body.article),
+            ...JSON.parse(req.body.data.article),
             imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-        } : /*Si non: */ {...req.body};
-        Article.update({id: req.params.id}, {...ArticleObject, id: req.params.id})
+        } : /*Si non: */ {...req.body.data};
+        Article.update({...ArticleObject}, {where: {id: req.params.id}})
             .then(() => res.status(200).json({message: "Article modifié !"}))
             .catch(error => res.status(400).json({error}));
     })
@@ -61,23 +61,18 @@ exports.modifyArticle = (req, res) => {
 
 // Supprime un article grâce à son ID (DELETE)
 exports.deleteArticle = (req, res) => {
-    console.log("TEST3");
-    Article.findOne({id: req.params.id})
+    Article.findOne({where: {id: req.params.id}})
     .then(article => {
         if(!article) { // Si l'article n'existe pas...
-            console.log("TEST1");
             return res.status(404).json({message: "Article non trouvé !"});
         };
-        if(article.userId != req.body.username) { // Si la requête n'est pas envoyée par la personne ayant créé la sauce...
-            console.log("TEST2");
+        if(article.userId != req.body.username) { // Si la requête n'est pas envoyée par l'auteur de l'article...
             return res.status(403).json({message: "Requête non autorisée !"});
         } 
-        Article.findOne({id: req.params.id})
+        Article.findOne({where: {id: req.params.id}})
         .then(article => {
-            console.log("TEST3");
             const filename = article.imageUrl.split("/images/")[1]; // Récupération du nom du fichier
             fs.unlink(`images/${filename}`, () => { // Supprime le fichier du stockage.
-                console.log("TEST4");
                 Article.destroy({where: {id: req.params.id}}) 
                 .then(() => res.status(200).json({message: "Article supprimé !"}))
                 .catch(() => res.status(400).json({message: "ICI"}));

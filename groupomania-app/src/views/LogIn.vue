@@ -35,14 +35,19 @@ export default {
             password: this.password
         })
         .then(res => {
+            console.log(res);
             let userId = res.data.id;
             let userName = res.data.username;
+            let userEmail = res.data.email;
+            let userPhoto = res.data.photo;
             let userToken = res.data.accessToken;
             localStorage.setItem("userStatus", "Online");
             localStorage.setItem("userId", userId);
             this.$emit("user-incoming", {
                 userName,
-                userToken
+                userToken,
+                userEmail,
+                userPhoto
             })
             window.location.replace("/#/home")
         })

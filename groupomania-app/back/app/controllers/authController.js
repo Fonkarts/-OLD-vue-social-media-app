@@ -7,11 +7,18 @@ let jwt = require("jsonwebtoken");
 let bcrypt = require("bcrypt");
 
 exports.signUp = (req, res) => {
-    // Save User to Database
+  // const userObject = req.file ? // La requête contient-elle un fichier ?
+  // // Si oui:
+  // {
+  //     ...JSON.parse(req.body.user),
+  //     photo: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+  // } : /*Si non: */ {...req.body};
+  //     User.create(userObject)
     User.create({
       username: req.body.username,
       email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 10)
+      password: bcrypt.hashSync(req.body.password, 10),
+      photo: req.body.photo
     })
       .then(user => {
         if (req.body.roles) {
@@ -21,8 +28,10 @@ exports.signUp = (req, res) => {
             user.setRoles(roles)
             .then(() => {
               res.status(200).json({message: "Utilisateur enregistré !"});
-            });
-          });
+            })
+            .catch(error => res.status(400).json({error}));
+          })
+          .catch(error => res.status(400).json({error}));
         } else {
           // user role = 1
           user.setRoles([1]).then(() => {
@@ -65,92 +74,13 @@ exports.signUp = (req, res) => {
             id: user.id,
             username: user.username,
             email: user.email,
+            photo: user.photo,
             roles: authorities,
             accessToken: token,
           });
-        });
+        })
+        .catch(error => res.status(400).json({error}));
       })
-      .catch(err => {
-        res.status(500).json({ message: err.message });
-      });
+      .catch(error => res.status(400).json({error}));
   };
 
-// const db = require("../models");
-// const config = require("../config/authConfig");
-// const User = db.user;
-// const Role = db.role;
-// const Op = db.Sequelize.Op;
-// var jwt = require("jsonwebtoken");
-// var bcrypt = require("bcrypt");
-// exports.signUp = (req, res) => {
-//   // Save User to Database
-//   User.create({
-//     username: req.body.username,
-//     email: req.body.email,
-//     password: bcrypt.hashSync(req.body.password, 8)
-//   })
-//     .then(user => {
-//       if (req.body.roles) {
-//         Role.findAll({
-//           where: {
-//             name: {
-//               [Op.or]: req.body.roles
-//             }
-//           }
-//         }).then(roles => {
-//           user.setRoles(roles).then(() => {
-//             res.send({ message: "User was registered successfully!" });
-//           });
-//         });
-//       } else {
-//         // user role = 1
-//         user.setRoles([1]).then(() => {
-//           res.send({ message: "User was registered successfully!" });
-//         });
-//       }
-//     })
-//     .catch(err => {
-//       res.status(500).send({ message: err.message });
-//     });
-// };
-// exports.logIn = (req, res) => {
-//   User.findOne({
-//     where: {
-//       username: req.body.username
-//     }
-//   })
-//     .then(user => {
-//       if (!user) {
-//         return res.status(404).send({ message: "User Not found." });
-//       }
-//       var passwordIsValid = bcrypt.compareSync(
-//         req.body.password,
-//         user.password
-//       );
-//       if (!passwordIsValid) {
-//         return res.status(401).send({
-//           accessToken: null,
-//           message: "Invalid Password!"
-//         });
-//       }
-//       var token = jwt.sign({ id: user.id }, config.secret, {
-//         expiresIn: 86400 // 24 hours
-//       });
-//       var authorities = [];
-//       user.getRoles().then(roles => {
-//         for (let i = 0; i < roles.length; i++) {
-//           authorities.push("ROLE_" + roles[i].name.toUpperCase());
-//         }
-//         res.status(200).send({
-//           id: user.id,
-//           username: user.username,
-//           email: user.email,
-//           roles: authorities,
-//           accessToken: token
-//         });
-//       });
-//     })
-//     .catch(err => {
-//       res.status(500).send({ message: err.message });
-//     });
-// };

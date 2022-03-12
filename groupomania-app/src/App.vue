@@ -15,8 +15,9 @@
       <router-link v-if="this.userIsLogged" @click="userIsLoggingOut()" to="/">Se déconnecter</router-link>
   </div>
 
-  <router-view @user-incoming="userStatusCheck" :username="username"/>
-<!-- CONFIGURER USERNAME ET UTILISER VALEUR POUR POST ARTICLE-->
+  <router-view 
+  @user-incoming="userStatusCheck" 
+  />
 
   <div class="copyrights"> 
     <p>Copyrights Groupomania, Fonkarts 2022. Made with <img src="./assets/logo.png" alt="Logo de Vue.js" class="vueLogo"></p> 
@@ -31,17 +32,20 @@ export default {
     return {
       accessToken: "",
       userIsLogged: "",
-      username: ""
+      username: "",
+      userEmail: "",
+      userPhoto: "",
     }
   },
 
   methods: {
     userStatusCheck(res) {
-      console.log(res);
+      this.userEmail = res.userEmail;
       this.accessToken = res.userToken;
       this.username = res.userName;
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`
       if(localStorage.getItem("userStatus") === "Online") {
+        localStorage.setItem("username", this.username);
         this.userIsLogged = true;
       } else {
         this.userIsLogged = false;
@@ -49,45 +53,54 @@ export default {
     },
     userIsLoggingOut() {
       localStorage.clear();
+      localStorage.setItem("userStatus", "Offline");
       this.userIsLogged = false;
+      this.username = "";
       window.location.replace("/#/");
     }
   },
   mounted() {
+    
     // CONDITION ONLINE !!!!
     if(localStorage.getItem("userStatus") === "Online") {
       this.userIsLogged = true;
     } else if (localStorage.getItem("userStatus") === "Offline") {
       this.userIsLogged = false;
-    }
-    if(localStorage.getItem("temp").length > 1) {
+    } 
+    //  PREMIERE CONDITION CI DESSOUS CHANGéE, LENGHT VIRé !
+    if(localStorage.getItem("temp") && localStorage.getItem("userStatus") === "Online") {
       this.accessToken = localStorage.getItem("temp");
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`;
     } else {
       console.log("temp vide");
     }
-    if(localStorage.getItem("userId")>=1) {
-      let storedUserId = localStorage.getItem("userId");
-      axios.get("http://localhost:3000/api/users/" + storedUserId)
-      .then(res => {
-        this.username = res.data.username;
-      })
+    if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
+    //   // let storedUserId = localStorage.getItem("userId");
+      this.username = localStorage.getItem("username");
+    //   axios.get("http://localhost:3000/api/users/" + this.username)
+    //   .then(res => {
+    //     this.username = res.data.username;
+    //     console.log(this.username);
+    //   })
     }
+    
   },
   updated() {
     // CONDITION ONLINE !!!!
-    if(localStorage.getItem("userId")>=1) {
-      let storedUserId = localStorage.getItem("userId");
-      axios.get("http://localhost:3000/api/users/" + storedUserId)
-      .then(res => {
-        this.username = res.data.username;
-      })
+    if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
+      this.username = localStorage.getItem("username");
+      // let storedUserId = localStorage.getItem("userId");
+      // axios.get("http://localhost:3000/api/users/" + storedUserId)
+      // .then(res => {
+      //   this.username = res.data.username;
+      // })
     }
   },
   beforeUpdate() {
-    localStorage.setItem("temp", this.accessToken);
+    if(localStorage.getItem("userStatus") === "Online") {
+      localStorage.setItem("temp", this.accessToken);
+    }
   },
-
 }
 
 </script>

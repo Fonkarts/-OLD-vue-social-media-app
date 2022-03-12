@@ -31,8 +31,6 @@
 
 <script>
 import axios from "axios"
-// import { mapState} from "vuex"
-// import { mapActions } from "vuex"
 export default {
     name: 'SignUp',
     data: function() {
@@ -41,6 +39,7 @@ export default {
             email: "",
             password: "",
             confirmPassword: "",
+            photo: "",
 
             usernameChecked: "",
             emailChecked: "",
@@ -98,7 +97,8 @@ export default {
                 axios.post("http://localhost:3000/api/auth/signup", {
                     username: this.username,
                     email: this.email,
-                    password: this.password
+                    password: this.password,
+                    photo: this.photo
                 })
                 .then(() => {
                     alert("Votre compte a bien été créé, utilisez maintenant vos identifiants pour vous connecter !")
@@ -114,7 +114,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import "../variables.scss";
 
 
 </style>

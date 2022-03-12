@@ -19,13 +19,23 @@ module.exports = function(app) {
   );
   app.get(
     "/api/users/:id",
-    // [authJwt.verifyToken],
+    [authJwt.verifyToken],
     controller.getUser
   );
   app.get(
     "/api/users",
-    // [authJwt.verifyToken],
+    [authJwt.verifyToken],
     controller.getAllUsers
+  );
+  app.put(
+    "/api/users/:id",
+    [authJwt.verifyToken],
+    controller.modifyUser
+  );
+  app.delete(
+    "/api/users/:id",
+    [authJwt.verifyToken],
+    controller.deleteUser
   );
 };
 

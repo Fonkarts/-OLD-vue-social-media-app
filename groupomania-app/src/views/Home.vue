@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="home__mainContainer mainContainer">
-      <p class="disclaimer" :username="username" ></p>
+      <p class="disclaimer"></p>
 
       <div class="home__contentContainer contentContainer">
 
@@ -20,7 +20,7 @@
                 <img v-show="this.showNewArticlePhoto" src=" " class="home__newArticlePhoto article__photo">
               </div>
 
-              <label for="fileSelector">Ajouter une image/photo</label>
+              <label for="fileSelector">Ajouter une image/photo/gif</label>
               <input type="file" id="fileSelector" class="input home__newArticleFileSelector" @change="getFileName()">
 
               <textarea v-model="newArticle.description" type="text" class="input article__writeCommentSection" placeholder="Écrivez une description..."></textarea>
@@ -28,7 +28,6 @@
           
             <button class="home__cancelNewArticleButton" @click="deployNewArticleContainer()">Annuler</button>
             <button class="home__confirmNewArticleButton" @click="sendNewArticleData()">Envoyer</button>
-
           </div>
         </div>
 
@@ -42,8 +41,6 @@
           <div class="article__photoContainer">
             <img class="article__photo" src="">
           </div>
-
-          <p class="article__description"></p>
 
           <button class="likeButton">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"/></svg>            
@@ -60,18 +57,39 @@
             <!-- Partager -->
           </button> 
 
+          <p class="article__description"></p>
+
           <div class="article__commentsSection">
             <button class="article__displayCommentsButton">Afficher les commentaires</button>
             <div class="article__readCommentsSection"> 
             </div>
 
-          <textarea type="text" class="input article__writeCommentSection" placeholder="Écrivez un commentaire..."></textarea>
-          <button class="article__sendCommentButton home__confirmNewArticleButton">Envoyer</button>
-          <button class="deleteArticleButton">Supprimer cet article</button>
-
+            <textarea type="text" class="input article__writeCommentSection" placeholder="Écrivez un commentaire..."></textarea>
+            <button class="article__sendCommentButton home__confirmNewArticleButton">Envoyer</button>
+            <br>
           </div>
+          <button class="deleteArticleButton">Supprimer l'article</button>
+          <button class="modifyArticleButton">Modifier l'article</button>
 
+          <div class="article__modify home__newArticle">  
+            <form class="article__modifyForm">
+              <p class="article__modifyDisclaimer">Merci de renseigner à nouveau ces champs :</p>
+              <textarea type="text" class="input home__newArticleTitle" ref="newArticleTitle" placeholder="Renseignez un nouveau titre..."></textarea>
+            
+              <!-- <div class="article__photoContainer">
+                <img src=" " class="article__modifyPhoto home__newArticlePhoto article__photo">
+              </div> -->
+
+              <label for="fileSelector">Modifier votre image/photo/gif</label>
+              <input type="file" id="fileSelector" class="input article__modifyArticleFileSelector home__newArticleFileSelector">
+
+              <textarea type="text" class="input article__writeCommentSection" placeholder="Écrivez une nouvelle description..."></textarea>
+            </form>          
           
+            <button class="home__cancelNewArticleButton">Annuler</button>
+            <button class="home__confirmNewArticleButton">Envoyer</button>
+          </div> 
+
         </article>
 
       </div>
@@ -86,18 +104,18 @@ export default {
   name: 'Home',
   data: function() {
     return {
+      username: "",
       userCreatesNewArticle: false,
       showNewArticlePhoto: false,
       userReadsComments: false,
       userModifiesComment: false,
+      userModifiesArticle: false,
 
       // newComment: "",
       newArticle: {
         title: "",
         description: "",
         imageUrl: "",
-        // likes: "",
-        // dislikes: "",
         userId: ""
       },
       article: {
@@ -117,11 +135,7 @@ export default {
         likes: "",
         dislikes: ""
       }
-
     }
-  },
-  props: {
-  username: String
   },
   methods: { 
 
@@ -155,7 +169,7 @@ export default {
       })
       .catch(error => console.log(error));
     },
-    displayCommentsContainer() {
+    displayCommentsContainer(event) {
       let currentDisplayCommentsButton = event.target;
       let currentArticleId = event.target.closest(".article").getAttribute("id");
       let currentCommentsSection = event.target.nextElementSibling;
@@ -230,7 +244,6 @@ export default {
               modifyCommentButton.style.borderRadius = "0.7em";
               modifyCommentButton.style.cursor = "pointer";
             }
-
           }
         })
         .catch(error => console.log(error));
@@ -322,10 +335,46 @@ export default {
           this.$router.go(this.$router.currentRoute)
         })
       .catch(error => console.log(error));
+    },
+    modifyArticle(event) {
+      
+      if(this.userModifiesArticle == false) {
+        this.userIsModifyingArticle = true;
+        let modifyContainer = event.target.nextElementSibling;
+        modifyContainer.style.borderRadius = "0.7em";
+        modifyContainer.style.display = "block";
+        let currentArticleId = event.target.closest(".article").getAttribute("id");
+
+        let modifyForm = document.querySelector("#modifyForm" + currentArticleId);
+        modifyForm.children[1].style.margin = "0.2em auto 0.5em auto";
+        modifyForm.children[1].style.display = "block";
+
+        let username = this.username;     
+        const reloadPage= () => {this.$router.go(this.$router.currentRoute)};
+
+        let cancelArticleModificationButton = modifyContainer.children[1];
+        cancelArticleModificationButton.addEventListener("click", function() {
+          reloadPage();
+        });
+
+        let confirmModifiedArticleButton = modifyContainer.children[2];
+        confirmModifiedArticleButton.addEventListener("click", function() {
+          axios.put("http://localhost:3000/api/articles/" + currentArticleId, {data:{
+            username: username,
+            title: modifyForm.children[1].value,
+            imageUrl: modifyForm.children[3].files[0].name,
+            description: modifyForm.children[4].value
+          }})
+          .then(() => {
+            reloadPage();
+          })
+          .catch(error => console.log(error));
+        })
+      }
     }
   },
   mounted() {
-        
+    this.username = localStorage.getItem("username");    
     document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
     axios.get("http://localhost:3000/api/articles")
     .then(res => {
@@ -363,14 +412,6 @@ export default {
           const displayCommentsButton = document.querySelectorAll(".article__displayCommentsButton");
           displayCommentsButton[i].setAttribute("id", "displayCommentButton" + res.data[i].id);
           displayCommentsButton[i].addEventListener("click", this.displayCommentsContainer);
-          
-          // // Bouton de modification du commentaire
-          // const modifyCommentButton = document.querySelectorAll(".article__modifyCommentButton");
-          // modifyCommentButton[i].setAttribute("id", "modifyCommentButton" + res.data[i].id);
-          // modifyCommentButton[i].addEventListener("click", this.modifyComment);
-          // if(res.data[i].userId != this.username) {
-          //   modifyCommentButton[i].style.display = "none";
-          // }
 
           // Bouton d'envoi des commentaires
           const sendCommentButton = document.querySelectorAll(".article__sendCommentButton");
@@ -378,22 +419,66 @@ export default {
           sendCommentButton[i].addEventListener("click", this.sendComment);
 
           // Bouton de suppression de l'article
-          
           const deleteButtons = document.querySelectorAll(".deleteArticleButton");
           deleteButtons[i].setAttribute("id", "deleteButton" + res.data[i].id);
           deleteButtons[i].addEventListener("click", this.deleteArticle);
           if(res.data[i].userId != this.username) {
             deleteButtons[i].style.display = "none";
           } 
+          // Bouton de modification de l'article
+          const modifyButtons = document.querySelectorAll(".modifyArticleButton");
+          modifyButtons[i].setAttribute("id", "modifyButton" + res.data[i].id);
+          modifyButtons[i].addEventListener("click", this.modifyArticle);
+          if(res.data[i].userId != this.username) {
+            modifyButtons[i].style.display = "none";
+          } 
+          document.querySelectorAll(".article__modifyForm")[i].setAttribute("id", "modifyForm"+ res.data[i].id);
         }
       }
     })
     .catch(error => console.log(error));
+
+    //--------------------------------------------------------//
+    // ---------------------LOCALSTORAGE----------------------//
+    //--------------------------------------------------------//
+
+    // if(localStorage.getItem("userStatus") === "Online") {
+    //   this.userIsLogged = true;
+    // } else if (localStorage.getItem("userStatus") === "Offline") {
+    //   this.userIsLogged = false;
+    // }
+    // if(localStorage.getItem("temp").length > 1 && localStorage.getItem("userStatus") === "Online") {
+    //   this.accessToken = localStorage.getItem("temp");
+    //   axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`;
+    // } else {
+    //   console.log("temp vide");
+    // }
+    // if(localStorage.getItem("userId")>=1 && localStorage.getItem("userStatus") === "Online") {
+    //   let storedUserId = localStorage.getItem("userId");
+    //   axios.get("http://localhost:3000/api/users/" + storedUserId)
+    //   .then(res => {
+    //     this.username = res.data.username;
+    //   })
+    // }
+    // document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
   }, 
 
-  updated() {    
-    document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
-  }
+  // updated() {    
+  //   document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
+  //   if(localStorage.getItem("userId")>=1 && localStorage.getItem("userStatus") === "Online") {
+  //     let storedUserId = localStorage.getItem("userId");
+  //     axios.get("http://localhost:3000/api/users/" + storedUserId)
+  //     .then(res => {
+  //       // console.log(res);
+  //       this.username = res.data.username;
+  //     })
+  //   }
+  // },
+  // beforeUpdate() {
+  //   if(localStorage.getItem("userStatus") === "Online") {
+  //     localStorage.setItem("temp", this.accessToken);
+  //   }
+  // },
 }
 </script>
 
@@ -455,7 +540,8 @@ export default {
     background-color: rgb(76, 212, 149);
   }
   & .dislikeButton {
-    background-color: rgb(230, 105, 105);
+    // background-color: rgb(230, 105, 105);
+    background-color: lighten($color-primary, 5);
   }
   & .shareButton {
     background-color: $color-secondary;
@@ -470,10 +556,6 @@ export default {
     border-radius: 3em;
     margin: 0.2em 0.3em;
     border: 0.1em black solid;
-    & svg {
-      height: 1.35em;
-      fill:black;
-    }
     & p {
       margin: 0 0.4em;
       padding-bottom: 0.2em;
@@ -482,10 +564,13 @@ export default {
       display: inline-block;
     }
   }
-  & .deleteArticleButton {
+  & .deleteArticleButton,
+  & .modifyArticleButton {
     @include button-secondary;
-    background-color: $color-primary;
-    width: 9.4em;
+    // background-color: rgb(235, 235, 235);
+    background-color: lighten($color-primary, 5);
+    margin: 0.8em 0.4em;
+    width: 8.4em;
     height: 1.5em;
   }
 
@@ -496,6 +581,7 @@ export default {
     background-color: rgb(235, 235, 235); 
     color: black;
     border-radius: 0.8em;
+    position: relative;
     @include desktop-only {
       max-width: 28em;
     }
@@ -504,10 +590,15 @@ export default {
     }
     & h3 {
       margin: 0 auto 0.1em auto;
+      padding: 0 0.8em;
     }
     &__author {
       font-size: 0.8em;
       margin: 0.1em 0 0.2em 0;
+    }
+    & svg {
+      height: 1.35em;
+      fill:black;
     }
     &__photoContainer {
       @include full-width;
@@ -515,7 +606,7 @@ export default {
     }
     &__photo {
       object-fit: cover;
-      width: 70vw;
+      width: 81vw;
       height: 65vw;
       min-width: 9em;
       min-height: 10em;
@@ -531,6 +622,7 @@ export default {
     }
     &__description {
       padding: 0.5em;
+      margin: 0.5em auto;
     }
     &__displayCommentsButton {
       @include button-secondary;
@@ -538,7 +630,7 @@ export default {
       max-width: 12em;
       height: 1.5em;
       font-size: 0.8em;
-      // background-color: rgb(76, 212, 149);
+      margin-top: 0;
     }
     &__readCommentsSection {
       font-family: $font-primary;
@@ -558,10 +650,10 @@ export default {
       font-family: $font-primary;
       font-size: 1em;
       color: black;
-      width: 65vw;
+      width: 75vw;
       min-width: 9em;
-      height: 4em;
-      margin-top: 1em;
+      // height: 2.5em;
+      margin-top: 0.3em;
       padding: 0.4em;
       border-radius: 0.8em;
       @include desktop-only {
@@ -570,6 +662,9 @@ export default {
       @include inter-only {
         max-width: 23em;
       }
+    }
+    &__modify {
+      display: none;
     }
   }
 }
