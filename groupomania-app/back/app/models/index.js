@@ -19,6 +19,7 @@ db.user = require("./userModel.js")(sequelize, Sequelize);
 db.article = require("./articleModel.js")(sequelize, Sequelize);
 db.role = require("./roleModel.js")(sequelize, Sequelize);
 db.comment = require("./commentModel.js")(sequelize, Sequelize);
+db.likes = require("./likesModel.js")(sequelize, Sequelize);
 
 // RELATIONS ENTRE TABLES
 db.role.belongsToMany(db.user, {

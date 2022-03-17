@@ -1,37 +1,27 @@
 module.exports = (sequelize, Sequelize) => {
-    const Article = sequelize.define("articles", {
+    const Likes = sequelize.define("likes", {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false
         },
-        title: {
-            type: Sequelize.STRING
-        },
-        description: {
-            type: Sequelize.STRING(500)
-        },
-        imageUrl: {
+        articleId: {
             type: Sequelize.STRING
         },
         userId: {
             type: Sequelize.STRING
         },
-        username: {
-            type: Sequelize.STRING
-        },
-        likes: { 
+        userLikes: { 
             type: Sequelize.INTEGER, 
             defaultValue: 0,
             allowNull: false
         },
-        dislikes: {
+        userDislikes: { 
             type: Sequelize.INTEGER, 
             defaultValue: 0,
             allowNull: false
         }
-        // FAIRE TABLE INTERMEDIAIRE POUR LISTE UTILISATEURS LIKED ET DISLIKED !
     });
-    return Article;
+    return Likes;
 };

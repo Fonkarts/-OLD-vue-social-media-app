@@ -24,9 +24,10 @@ require('./routes/authRoutes')(app);
 require('./routes/userRoutes')(app);
 require("./routes/articleRoutes")(app);
 require("./routes/commentRoutes")(app);
+require("./routes/likesRoutes")(app);
 
 const db = require("./models");
-const Role = db.role; // >> !!!!!!!!!!!!! ANY !!!!!!!!!!!!!!!!!!! CHECK !!
+const Role = db.role; 
 db.sequelize.sync(
   // {force: true})
   // .then(() => {

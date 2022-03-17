@@ -12,18 +12,11 @@ module.exports = (sequelize, Sequelize) => {
         userId: {
             type: Sequelize.STRING
         },
+        username: {
+            type: Sequelize.STRING
+        },
         articleId: {
             type: Sequelize.INTEGER
-        },
-        likes: { 
-            type: Sequelize.INTEGER, 
-            defaultValue: 0,
-            allowNull: false
-        },
-        dislikes: {
-            type: Sequelize.INTEGER, 
-            defaultValue: 0,
-            allowNull: false
         }
     });
     return Comment;

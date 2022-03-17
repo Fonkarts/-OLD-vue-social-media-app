@@ -16,7 +16,8 @@
   </div>
 
   <router-view 
-  @user-incoming="userStatusCheck" 
+  @user-incoming="userStatusCheck"
+  @user-account-deleted="userIsLoggingOut" 
   />
 
   <div class="copyrights"> 
@@ -33,6 +34,7 @@ export default {
       accessToken: "",
       userIsLogged: "",
       username: "",
+      userId: "",
       userEmail: "",
       userPhoto: "",
     }
@@ -57,7 +59,35 @@ export default {
       this.userIsLogged = false;
       this.username = "";
       window.location.replace("/#/");
-    }
+    },
+    // addArticleLike(res) {
+    //   let currentArticleId = res.currentArticleId;
+    //   console.log(currentArticleId);
+    //   let userId = this.userId;
+    //   axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+    //     userId: userId,
+    //     like: 1 
+    //     }})
+    //   .then(() => {
+    //     console.log("like ajouté à articles !");
+    //     this.$router.go(this.$router.currentRoute)
+    //   })
+    //   .catch(error => console.log(error));
+    // },
+    // removeArticleLike(res) {
+    //   let currentArticleId = res.currentArticleId;
+    //   console.log(currentArticleId);
+    //   let userId = this.userId;
+    //   axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+    //     userId: userId,
+    //     like: 0 
+    //     }})
+    //   .then(() => {
+    //     console.log("like ajouté à articles !");
+    //     this.$router.go(this.$router.currentRoute)
+    //   })
+    //   .catch(error => console.log(error));
+    // }
   },
   mounted() {
     
@@ -75,7 +105,7 @@ export default {
       console.log("temp vide");
     }
     if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
-    //   // let storedUserId = localStorage.getItem("userId");
+      this.userId = JSON.parse(localStorage.getItem("userId"));
       this.username = localStorage.getItem("username");
     //   axios.get("http://localhost:3000/api/users/" + this.username)
     //   .then(res => {
@@ -180,8 +210,8 @@ h2 {
   margin: 0 auto 0.5em auto;
   padding: 0.2em 0.2em 0.4em 0.2em;
   color: white;
-  width: 47vw;
-  max-width: 7em;
+  width: 56vw;
+  max-width: 8em;
 }
 
 .home__title {

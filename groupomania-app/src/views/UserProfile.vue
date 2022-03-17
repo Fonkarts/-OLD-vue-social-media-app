@@ -54,15 +54,19 @@ export default {
     data: function() {
         return {
             username: "",
+            userId: "",
             userEmail: "",
             userPhoto: "",
+
             showUserPhoto: "",
             userModifiesPhoto: false,
             userModifiesUsername: false,
             userModifiesEmail: false,
             userDeletesAccount: false,
+
             modifiedUsername: "",
             modifiedEmail: "",
+
             usernameChecked: "",
             emailChecked: "",
         }
@@ -91,8 +95,7 @@ export default {
             }
         },
         sendNewPhoto() {
-            axios.put("http://localhost:3000/api/users/" + this.username, {data: {
-                userId: this.username,
+            axios.put("http://localhost:3000/api/users/" + this.userId, {data: {
                 photo: this.userPhoto
             }})
             .then(() => {
@@ -122,8 +125,7 @@ export default {
         },
         sendNewUsername() {
             if(this.usernameChecked == true) {
-                axios.put("http://localhost:3000/api/users/" + this.username, {data: {
-                    userId: this.username,
+                axios.put("http://localhost:3000/api/users/" + this.userId, {data: {
                     username: document.querySelector(".userProfile__newUsernameInput").value
                 }})
                 .then(() => {
@@ -152,8 +154,7 @@ export default {
         },
         sendNewEmail() {
             if(this.emailChecked == true) {
-                axios.put("http://localhost:3000/api/users/" + this.username, {data: {
-                    userId: this.username,
+                axios.put("http://localhost:3000/api/users/" + this.userId, {data: {
                     email: document.querySelector(".userProfile__newUserEmailInput").value
                 }})
                 .then(() => {
@@ -176,30 +177,33 @@ export default {
         },
         deleteUserAccount() {
             // if localStorage status online...
-            axios.delete("http://localhost:3000/api/users/" + this.username, {data:{userId: this.username}})
+            axios.delete("http://localhost:3000/api/users/" + this.userId)
             .then(() => {
                 alert("Votre compte a bien été supprimé !")
+                this.$emit("user-account-deleted");
                 window.location.replace("/#/");
             })
         }
     },
     mounted() {
         this.username = localStorage.getItem("username");
+        this.userId = JSON.parse(localStorage.getItem("userId"));
+        console.log(this.userId);
         console.log(this.username);
-        axios.get("http://localhost:3000/api/users/" + this.username)
+        axios.get("http://localhost:3000/api/users/" + this.userId)
         .then(res => {
             console.log(res);
-            this.username = localStorage.getItem("username");
+            this.username = res.data.username;
             this.userEmail = res.data.userEmail;
             let userProfileMail = document.querySelector(".userProfile__email");
             userProfileMail.innerHTML = "Adresse e-mail: " + this.email;
             let userProfilePhoto = document.querySelector(".userProfile__photo");
-            // if(res.data.userPhoto != "") {
+            if(res.data.userPhoto != "") {
                 this.userPhoto = res.data.userPhoto;
                 this.showUserPhoto = true;
                 console.log(this.userPhoto);
                 userProfilePhoto.setAttribute("src", "http://localhost:3000/images/" + this.userPhoto);
-            // } else {
+            }// else {
                 // this.userPhoto = "";
             // }
         })

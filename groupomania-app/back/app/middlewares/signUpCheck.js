@@ -7,8 +7,7 @@ checkExistingNameOrEmail = (req, res, next) => {
   User.findOne({where: {username: req.body.username}})
   .then(user => {
     if (user) {
-      res.status(400).json({message: "Cet identifiant est déjà utilisé !"});
-      return;
+      return res.status(400).json({message: "Cet identifiant est déjà utilisé !"});
     }
     // Email
     User.findOne({where: {email: req.body.email}})

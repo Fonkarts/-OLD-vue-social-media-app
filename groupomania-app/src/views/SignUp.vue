@@ -104,7 +104,10 @@ export default {
                     alert("Votre compte a bien été créé, utilisez maintenant vos identifiants pour vous connecter !")
                     window.location.replace("/#/")
                 })
-                .catch(error => { console.log(error) });
+                .catch(error => {
+                        alert("Ce nom ou cette adresse mail n'est plus disponible !");
+                        console.log(error);
+                });
             } else {
                 alert("Veuillez vérifier les champs du formulaire ;)");
             }

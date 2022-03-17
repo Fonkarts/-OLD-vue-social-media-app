@@ -44,12 +44,12 @@
 
           <button class="likeButton">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M96 191.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64c17.67 0 32-14.33 32-31.1V223.1C128 206.3 113.7 191.1 96 191.1zM512 227c0-36.89-30.05-66.92-66.97-66.92h-99.86C354.7 135.1 360 113.5 360 100.8c0-33.8-26.2-68.78-70.06-68.78c-46.61 0-59.36 32.44-69.61 58.5c-31.66 80.5-60.33 66.39-60.33 93.47c0 12.84 10.36 23.99 24.02 23.99c5.256 0 10.55-1.721 14.97-5.26c76.76-61.37 57.97-122.7 90.95-122.7c16.08 0 22.06 12.75 22.06 20.79c0 7.404-7.594 39.55-25.55 71.59c-2.046 3.646-3.066 7.686-3.066 11.72c0 13.92 11.43 23.1 24 23.1h137.6C455.5 208.1 464 216.6 464 227c0 9.809-7.766 18.03-17.67 18.71c-12.66 .8593-22.36 11.4-22.36 23.94c0 15.47 11.39 15.95 11.39 28.91c0 25.37-35.03 12.34-35.03 42.15c0 11.22 6.392 13.03 6.392 22.25c0 22.66-29.77 13.76-29.77 40.64c0 4.515 1.11 5.961 1.11 9.456c0 10.45-8.516 18.95-18.97 18.95h-52.53c-25.62 0-51.02-8.466-71.5-23.81l-36.66-27.51c-4.315-3.245-9.37-4.811-14.38-4.811c-13.85 0-24.03 11.38-24.03 24.04c0 7.287 3.312 14.42 9.596 19.13l36.67 27.52C235 468.1 270.6 480 306.6 480h52.53c35.33 0 64.36-27.49 66.8-62.2c17.77-12.23 28.83-32.51 28.83-54.83c0-3.046-.2187-6.107-.6406-9.122c17.84-12.15 29.28-32.58 29.28-55.28c0-5.311-.6406-10.54-1.875-15.64C499.9 270.1 512 250.2 512 227z"/></svg>            
-            <p class="likesCount">0</p>
+            <p class="likesCount"></p>
           </button>
 
           <button class="dislikeButton">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M128 288V64.03c0-17.67-14.33-31.1-32-31.1H32c-17.67 0-32 14.33-32 31.1v223.1c0 17.67 14.33 31.1 32 31.1h64C113.7 320 128 305.7 128 288zM481.5 229.1c1.234-5.092 1.875-10.32 1.875-15.64c0-22.7-11.44-43.13-29.28-55.28c.4219-3.015 .6406-6.076 .6406-9.122c0-22.32-11.06-42.6-28.83-54.83c-2.438-34.71-31.47-62.2-66.8-62.2h-52.53c-35.94 0-71.55 11.87-100.3 33.41L169.6 92.93c-6.285 4.71-9.596 11.85-9.596 19.13c0 12.76 10.29 24.04 24.03 24.04c5.013 0 10.07-1.565 14.38-4.811l36.66-27.51c20.48-15.34 45.88-23.81 71.5-23.81h52.53c10.45 0 18.97 8.497 18.97 18.95c0 3.5-1.11 4.94-1.11 9.456c0 26.97 29.77 17.91 29.77 40.64c0 9.254-6.392 10.96-6.392 22.25c0 13.97 10.85 21.95 19.58 23.59c8.953 1.671 15.45 9.481 15.45 18.56c0 13.04-11.39 13.37-11.39 28.91c0 12.54 9.702 23.08 22.36 23.94C456.2 266.1 464 275.2 464 284.1c0 10.43-8.516 18.93-18.97 18.93H307.4c-12.44 0-24 10.02-24 23.1c0 4.038 1.02 8.078 3.066 11.72C304.4 371.7 312 403.8 312 411.2c0 8.044-5.984 20.79-22.06 20.79c-12.53 0-14.27-.9059-24.94-28.07c-24.75-62.91-61.74-99.9-80.98-99.9c-13.8 0-24.02 11.27-24.02 23.99c0 7.041 3.083 14.02 9.016 18.76C238.1 402 211.4 480 289.9 480C333.8 480 360 445 360 411.2c0-12.7-5.328-35.21-14.83-59.33h99.86C481.1 351.9 512 321.9 512 284.1C512 261.8 499.9 241 481.5 229.1z"/></svg>
-            <p class="dislikesCount">0</p>
+            <p class="dislikesCount"></p>
           </button>
 
           <button class="shareButton">
@@ -107,33 +107,34 @@ export default {
       username: "",
       userCreatesNewArticle: false,
       showNewArticlePhoto: false,
+      userModifiesArticle: false,
       userReadsComments: false,
       userModifiesComment: false,
-      userModifiesArticle: false,
+      userEverVotedArray: [],
+      userLikesArray: [],
+      userDislikesArray: [],
 
       // newComment: "",
       newArticle: {
         title: "",
         description: "",
         imageUrl: "",
-        userId: ""
+        userId: "",
+        username: "",
       },
       article: {
         id: "",
         title: "",
         description: "",
         imageUrl: "",
-        // likes: "",
-        // dislikes: "",
         userId: ""
       },
       comment: {
-        id: "",
+        // id: "",
         text: "",
         userId: "",
+        username: "",
         articleId: "",
-        likes: "",
-        dislikes: ""
       }
     }
   },
@@ -156,7 +157,8 @@ export default {
       }
     },
     sendNewArticleData() {
-      this.newArticle.userId = this.username;
+      this.newArticle.userId = this.userId;
+      this.newArticle.username = this.username;
       axios.post("http://localhost:3000/api/articles", this.newArticle)
       .then(() => {
           this.newArticle.title = "";
@@ -169,6 +171,252 @@ export default {
       })
       .catch(error => console.log(error));
     },
+    async sendArticleLike(event) {
+      let currentArticleId = event.target.closest(".article").getAttribute("id");
+      let userId = localStorage.getItem("userId");
+
+      if(event.target.nextElementSibling.classList.contains("hasDislikedButton")) {
+        alert("Veuillez retirer votre Dislike avant de soumettre un Like ;) !");
+      } else {
+        // Si l'utilisateur retire son like
+        if(event.target.classList.contains("hasLikedButton")) {
+          // Modification des likes de l'article et des valeurs de la table des likes/dislikes utilisateurs
+          try {
+            const removeLike = await axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+              userId: userId,
+              like: 0,
+              likeEntries: {
+                userLikes: 0,
+                userDislikes: 0
+              }
+            }})
+            if(removeLike) {
+              event.target.classList.remove("hasLikedButton");
+              event.target.classList.add("hasNotLikedButton");
+              this.$router.go(this.$router.currentRoute);
+              console.log(removeLike);
+              console.log("like retiré de likeEntries (modif)");
+              console.log("like retiré d'articles");
+            }
+          } catch(error) {
+              console.log(error);
+          }
+        } 
+        // Si l'utilisateur soumet un like...
+        else if(event.target.classList.contains("hasNotLikedButton")){
+          // ... et qu'il n'avait pas encore voté pour cet article...
+          if(event.target.nextElementSibling.classList.contains("hasNotDislikedButton") 
+            && this.userLikesArray.indexOf(currentArticleId) == -1
+            && this.userDislikesArray.indexOf(currentArticleId) == -1
+            && this.userEverVotedArray.indexOf(currentArticleId) == -1) {
+              // Modification des likes de l'article et création d'une entrée dans la table des likes/dislikes utilisateurs
+            try {
+              const sendFirstLike = await axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+                userId: userId,
+                like: 1,
+                likeEntries: {
+                  userLikes: 1,
+                  userDislikes: 0 
+                }
+              }})
+              if(sendFirstLike) {
+                event.target.classList.remove("hasNotLikedButton");
+                event.target.classList.add("hasLikedButton");
+                this.$router.go(this.$router.currentRoute);
+                console.log("entrée likesEntries créée: like !");
+                console.log("like ajouté à articles !");
+              }
+            } catch(error) {
+              console.log(error);
+            }
+          } else { // ... ou s'il avait déjà voté auparavant...
+            // Modification des likes de l'article et des valeurs de la table des likes/dislikes utilisateurs
+            try {
+              const sendAnotherLike = await axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+                userId: userId,
+                like: 1,
+                likeEntries: {
+                  userLikes: 1,
+                  userDislikes: 0
+                }
+              }})
+              if(sendAnotherLike) {
+                event.target.classList.remove("hasNotLikedButton");
+                event.target.classList.add("hasLikedButton");
+                this.$router.go(this.$router.currentRoute);
+                console.log("entrée likesEntries créée: like !");
+                console.log("like ajouté à articles !");
+              }
+            } catch(error) {
+              console.log(error);
+            }
+          }
+        }
+      }
+    },
+    async sendArticleDislike(event) {
+      let currentArticleId = event.target.closest(".article").getAttribute("id");
+      let userId = localStorage.getItem("userId");
+      
+      if(event.target.previousElementSibling.classList.contains("hasLikedButton")) {
+        alert("Veuillez retirer votre Like avant de soumettre un Dislike ;) !");
+      } else {
+        // Si l'utilisateur retire son like
+        if(event.target.classList.contains("hasDislikedButton")) {
+          // Modification des dislikes de l'article et des valeurs de la table des likes/dislikes utilisateurs
+          try {
+            const removeDislike = await axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+              userId: userId,
+              dislike: 0,
+              likeEntries: {
+                userLikes: 0,
+                userDislikes: 0
+              }
+            }})
+            if(removeDislike) {
+              event.target.classList.remove("hasDisikedButton");
+              event.target.classList.add("hasNotDikedButton");
+              this.$router.go(this.$router.currentRoute);
+              console.log(removeDislike);
+              console.log("dislike retiré de likeEntries (modif)");
+              console.log("dislike retiré d'articles");
+            }
+          } catch(error) {
+              console.log(error);
+          }
+        } 
+        // Si l'utilisateur soumet un dislike...
+        else if(event.target.classList.contains("hasNotDislikedButton")){
+          // ... et qu'il n'avait pas encore voté pour cet article...
+          if(event.target.previousElementSibling.classList.contains("hasNotLikedButton") 
+            && this.userLikesArray.indexOf(currentArticleId) == -1
+            && this.userDislikesArray.indexOf(currentArticleId) == -1
+            && this.userEverVotedArray.indexOf(currentArticleId) == -1) {
+              // Modification des dislikes de l'article et création d'une entrée dans la table des likes/dislikes utilisateurs
+            try {
+              const sendFirstDislike = await axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+                userId: userId,
+                dislike: 1,
+                likeEntries: {
+                  userLikes: 0,
+                  userDislikes: 1 
+                }
+              }})
+              if(sendFirstDislike) {
+                event.target.classList.remove("hasNotDislikedButton");
+                event.target.classList.add("hasDislikedButton");
+                this.$router.go(this.$router.currentRoute);
+                console.log("entrée likesEntries créée: dislike !");
+                console.log("dislike ajouté à articles !");
+              }
+            } catch(error) {
+              console.log(error);
+            }
+          } else { // ... ou s'il avait déjà voté auparavant...
+            // Modification des likes de l'article et des valeurs de la table des likes/dislikes utilisateurs
+            try {
+              const sendAnotherDislike = await axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+                userId: userId,
+                dislike: 1,
+                likeEntries: {
+                  userLikes: 0,
+                  userDislikes: 1
+                }
+              }})
+              if(sendAnotherDislike) {
+                event.target.classList.remove("hasNotDislikedButton");
+                event.target.classList.add("hasDislikedButton");
+                this.$router.go(this.$router.currentRoute);
+                console.log("entrée likesEntries créée: dislike !");
+                console.log("dislike ajouté à articles !");
+              }
+            } catch(error) {
+              console.log(error);
+            }
+          }
+        }
+      }
+    },
+
+    // ------------------------   TEST DISLIKE ORIGINAL ----------------------------
+
+    // sendArticleDislike(event) {
+    //   let currentArticleId = event.target.closest(".article").getAttribute("id");
+    //   let userId = localStorage.getItem("userId");
+
+    //   if(event.target.previousElementSibling.classList.contains("hasLikedButton")) {
+    //     alert("Veuillez retirer votre Like avant de soumettre un Dislike ;) !");
+    //   } else {
+    //     // Si l'utilisateur retire son dislike
+    //     if(event.target.classList.contains("hasDislikedButton")) { 
+
+    //       // Modification de la table des likes/dislikes utilisateurs
+    //       axios.put("http://localhost:3000/api/likes/" + userId, {data:{
+    //         articleId: currentArticleId,
+    //         userDislikes: 0
+    //       }})
+    //         .then(() => {
+    //           console.log("dislike retiré de likesEntries (modif)");
+    //         })
+    //         .catch(error => console.log(error));
+
+    //       // Modification des dislikes de l'article 
+    //       axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+    //         userId: userId,
+    //         dislike: 0 
+    //       }})
+    //         .then(() => {
+    //           event.target.classList.remove("hasDislikedButton");
+    //           event.target.classList.add("hasNotDislikedButton");
+    //           console.log("dislike retiré d'articles !");
+    //         })
+    //         .catch(error => console.log(error));
+    //     } 
+    //     // Si l'utilisateur soumet un dislike...
+    //     else if(event.target.classList.contains("hasNotDislikedButton")){
+    //       // ... et qu'il n'avait pas encore voté pour cet article...
+    //       if(event.target.previousElementSibling.classList.contains("hasNotLikedButton") 
+    //         && this.userLikesArray.indexOf(currentArticleId) == -1
+    //         && this.userDislikesArray.indexOf(currentArticleId) == -1
+    //         && this.userEverVotedArray.indexOf(currentArticleId) == -1) {
+    //         // Création d'une entrée dans la table des likes/dislikes utilisateurs
+    //         axios.post("http://localhost:3000/api/likes", {data: {
+    //           articleId: currentArticleId,
+    //           userId: userId,
+    //           userLikes: 0,
+    //           userDislikes: 1
+    //         }})
+    //         .then(res => {
+    //           console.log(res);
+    //           console.log("entrée de likesEntries créée : dislike !");
+    //         })
+    //         .catch(error => console.log(error));
+    //       } else { // ... ou s'il avait déjà voté auparavant...
+    //         // Modification de la table des likes/dislikes utilisateurs
+    //         axios.put("http://localhost:3000/api/likes/" + userId, {data:{
+    //           articleId: currentArticleId,
+    //           userDislikes: 1
+    //         }})
+    //           .then(() => {
+    //             console.log("dislike ajouté à likeEntries (modif)");
+    //           })
+    //           .catch(error => console.log(error));
+    //       }
+    //       // Modification des dislikes de l'article 
+    //       axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
+    //         userId: userId,
+    //         dislike: 1 
+    //         }})
+    //           .then(() => {
+    //             event.target.classList.remove("hasNotDislikedButton");
+    //             event.target.classList.add("hasDislikedButton");
+    //             console.log("dislike ajouté à article");
+    //           })
+    //           .catch(error => console.log(error));
+    //     }
+    //   }
+    // },
+
     displayCommentsContainer(event) {
       let currentDisplayCommentsButton = event.target;
       let currentArticleId = event.target.closest(".article").getAttribute("id");
@@ -194,7 +442,7 @@ export default {
             let currentCommentAuthor = document.createElement("h4");
             currentComment.appendChild(currentCommentAuthor);
             currentCommentAuthor.className = "article__commentAuthor";
-            currentCommentAuthor.innerHTML = res.data[i].userId + " a écrit : ";
+            currentCommentAuthor.innerHTML = res.data[i].username + " a écrit : ";
 
             currentCommentAuthor.style.margin = "0.1em 0";
 
@@ -206,12 +454,12 @@ export default {
 
             currentCommentText.style.margin = "0 0 0.4em 0";
 
-            if(res.data[i].userId == this.username) {
+            if(res.data[i].userId == this.userId) {
             // Création du bouton de suppression du commentaire
             
               let deleteCommentButton = document.createElement("button");
               currentComment.appendChild(deleteCommentButton);
-              deleteCommentButton.className = "article__deleteCommentButton commentButtons";
+              // deleteCommentButton.classList.add("smallCommentsButtons");
               deleteCommentButton.innerHTML = "Supprimer";
               deleteCommentButton.addEventListener("click", this.deleteComment);
 
@@ -229,7 +477,7 @@ export default {
             // Création du bouton de modification du commentaire
               let modifyCommentButton = document.createElement("button");
               currentComment.appendChild(modifyCommentButton);
-              modifyCommentButton.className = "article__modifyCommentButton commentButtons";
+              // modifyCommentButton.classList.add("smallCommentsButtons");
               modifyCommentButton.innerHTML = "Modifier";
               modifyCommentButton.addEventListener("click", this.modifyComment);
 
@@ -272,10 +520,9 @@ export default {
 
         let confirmCommentModificationButton = document.createElement("button");
         currentComment.appendChild(confirmCommentModificationButton);
-        // confirmCommentModificationButton.setAttribute("class", ".commentButtons");
         confirmCommentModificationButton.innerHTML = "Envoyer";
+        // confirmCommentModificationButton.classList.add("smallCommentsButtons");
 
-        // let commentButtons = document.querySelectorAll(".commentButtons");
         confirmCommentModificationButton.style.fontSize = "0.8em";
         confirmCommentModificationButton.style.fontWeight = "bold";
         confirmCommentModificationButton.style.fontFamily = "Roboto Condensed";
@@ -287,17 +534,18 @@ export default {
         confirmCommentModificationButton.style.borderRadius = "0.7em";
         confirmCommentModificationButton.style.cursor = "pointer";
         let username = this.username;
+        let userId = this.userId;
         const reloadPage= () => {this.$router.go(this.$router.currentRoute)};
 
         confirmCommentModificationButton.addEventListener("click", function() {
           if(modifyCommentInput.value != "") {
             axios.put("http://localhost:3000/api/comments/" + currentCommentId, {data:{
+              userId: userId,
               username: username,
               text: modifyCommentInput.value
               }})
               .then(() => {
                   reloadPage();
-                  
                 })
               .catch(error => console.log(error));
           }
@@ -307,7 +555,7 @@ export default {
     deleteComment(event) {
       let currentCommentId = event.target.closest(".article__comment").getAttribute("id");
       axios.delete("http://localhost:3000/api/comments/" + currentCommentId, {data:{
-        username: this.username
+        userId: this.userId
         }})
        .then(() => {
           this.$router.go(this.$router.currentRoute)
@@ -318,7 +566,8 @@ export default {
       if(this.newComment != "") {
         this.comment.articleId =  event.target.closest(".article").getAttribute("id");
         this.comment.text = event.target.previousElementSibling.value;
-        this.comment.userId = this.username;
+        this.comment.username = this.username;
+        this.comment.userId = this.userId;
         axios.post("http://localhost:3000/api/comments", this.comment)
         .then(() => {
           this.$router.go(this.$router.currentRoute)
@@ -330,7 +579,7 @@ export default {
     },
     deleteArticle(event) {
       let currentArticleId = event.target.closest(".article").getAttribute("id");
-      axios.delete("http://localhost:3000/api/articles/" + currentArticleId,{data: {username: this.username}})
+      axios.delete("http://localhost:3000/api/articles/" + currentArticleId,{data: {userId: this.userId}})
        .then(() => {
           this.$router.go(this.$router.currentRoute)
         })
@@ -349,7 +598,7 @@ export default {
         modifyForm.children[1].style.margin = "0.2em auto 0.5em auto";
         modifyForm.children[1].style.display = "block";
 
-        let username = this.username;     
+        let userId = this.userId;     
         const reloadPage= () => {this.$router.go(this.$router.currentRoute)};
 
         let cancelArticleModificationButton = modifyContainer.children[1];
@@ -360,7 +609,7 @@ export default {
         let confirmModifiedArticleButton = modifyContainer.children[2];
         confirmModifiedArticleButton.addEventListener("click", function() {
           axios.put("http://localhost:3000/api/articles/" + currentArticleId, {data:{
-            username: username,
+            userId: userId,
             title: modifyForm.children[1].value,
             imageUrl: modifyForm.children[3].files[0].name,
             description: modifyForm.children[4].value
@@ -374,7 +623,8 @@ export default {
     }
   },
   mounted() {
-    this.username = localStorage.getItem("username");    
+    this.username = localStorage.getItem("username"); 
+    this.userId = JSON.parse(localStorage.getItem("userId"));   
     document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
     axios.get("http://localhost:3000/api/articles")
     .then(res => {
@@ -395,7 +645,8 @@ export default {
           this.article.title = res.data[i].title;
           document.querySelectorAll(".article__title")[i].textContent = this.article.title;
           this.article.userId = res.data[i].userId;
-          document.querySelectorAll(".article__author")[i].textContent = " publié par " + this.article.userId;
+          this.article.username = res.data[i].username;
+          document.querySelectorAll(".article__author")[i].textContent = " publié par " + this.article.username;
           this.article.description = res.data[i].description;
           document.querySelectorAll(".article__description")[i].textContent = this.article.description;
           
@@ -407,7 +658,7 @@ export default {
           } else {
             articlePhoto[i].setAttribute("src", "http://localhost:3000/images/" + this.article.imageUrl);
           }
-          
+
           // Bouton d'affichage des commentaires
           const displayCommentsButton = document.querySelectorAll(".article__displayCommentsButton");
           displayCommentsButton[i].setAttribute("id", "displayCommentButton" + res.data[i].id);
@@ -422,14 +673,14 @@ export default {
           const deleteButtons = document.querySelectorAll(".deleteArticleButton");
           deleteButtons[i].setAttribute("id", "deleteButton" + res.data[i].id);
           deleteButtons[i].addEventListener("click", this.deleteArticle);
-          if(res.data[i].userId != this.username) {
+          if(res.data[i].userId != this.userId) {
             deleteButtons[i].style.display = "none";
           } 
           // Bouton de modification de l'article
           const modifyButtons = document.querySelectorAll(".modifyArticleButton");
           modifyButtons[i].setAttribute("id", "modifyButton" + res.data[i].id);
           modifyButtons[i].addEventListener("click", this.modifyArticle);
-          if(res.data[i].userId != this.username) {
+          if(res.data[i].userId != this.userId) {
             modifyButtons[i].style.display = "none";
           } 
           document.querySelectorAll(".article__modifyForm")[i].setAttribute("id", "modifyForm"+ res.data[i].id);
@@ -438,47 +689,80 @@ export default {
     })
     .catch(error => console.log(error));
 
-    //--------------------------------------------------------//
-    // ---------------------LOCALSTORAGE----------------------//
-    //--------------------------------------------------------//
+    // Likes et Dislikes de l'utilisateur
+    const userId = localStorage.getItem("userId");
+    axios.get("http://localhost:3000/api/likes/" + userId)
+    .then(res => {
+      // console.log(res);
+      let likesDislikesArray = res.data.articlesLiked;
+      for(let i=0; i<likesDislikesArray.length; i++) {
 
-    // if(localStorage.getItem("userStatus") === "Online") {
-    //   this.userIsLogged = true;
-    // } else if (localStorage.getItem("userStatus") === "Offline") {
-    //   this.userIsLogged = false;
-    // }
-    // if(localStorage.getItem("temp").length > 1 && localStorage.getItem("userStatus") === "Online") {
-    //   this.accessToken = localStorage.getItem("temp");
-    //   axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`;
-    // } else {
-    //   console.log("temp vide");
-    // }
-    // if(localStorage.getItem("userId")>=1 && localStorage.getItem("userStatus") === "Online") {
-    //   let storedUserId = localStorage.getItem("userId");
-    //   axios.get("http://localhost:3000/api/users/" + storedUserId)
-    //   .then(res => {
-    //     this.username = res.data.username;
-    //   })
-    // }
-    // document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
+        if(likesDislikesArray[i].userId == userId) {
+          this.userEverVotedArray.push(likesDislikesArray[i].articleId);
+          console.log("id article ajouté au tableau userEverVoted");
+        }
+        if(likesDislikesArray[i].userId == userId 
+        && likesDislikesArray[i].userLikes == 1) {
+          this.userLikesArray.push(likesDislikesArray[i].articleId);
+          console.log("id article ajouté au tableau userLikes");
+        } 
+        else if (likesDislikesArray[i].userId == userId 
+        && likesDislikesArray[i].userDislikes == 1) {
+          this.userDislikesArray.push(likesDislikesArray[i].articleId);
+          console.log("id article ajouté au tableau userDislikes");
+        }
+        else {
+          console.log("userLikesArray et userDislikesArray vides !");
+        }
+      }
+      // console.log(likesDislikesArray);
+      // console.log(this.userLikesArray);
+      console.log(this.userEverVotedArray);
+    })
+    .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/api/articles")
+    .then(res => {
+      if(res.status == 200) {
+        for(let i=0; i<res.data.length; i++) {
+          // Bouton like
+          const likeButton = document.querySelectorAll(".likeButton");
+          likeButton[i].addEventListener("click", this.sendArticleLike);
+
+          // Bouton dislike
+          const dislikeButton = document.querySelectorAll(".dislikeButton");
+          dislikeButton[i].addEventListener("click", this.sendArticleDislike);
+
+          // Affichage des likes et dislikes
+          const likesCounter = document.querySelectorAll(".likesCount");
+          const dislikesCounter = document.querySelectorAll(".dislikesCount");
+          likesCounter[i].textContent = res.data[i].likes;
+          dislikesCounter[i].textContent = res.data[i].dislikes;
+
+          let likedArticlesId = JSON.stringify(res.data[i].id);
+          // Si l'utilisateur a liké cet article (id de l'article dans tableau userLikes)
+          if(this.userLikesArray.indexOf(likedArticlesId) != -1 && this.userDislikesArray.indexOf(likedArticlesId) == -1) {
+            likeButton[i].classList.add("hasLikedButton");
+            dislikeButton[i].classList.add("hasNotDislikedButton");
+          } 
+          // Si l'utilisateur a disliké cet article (id de l'article dans tableau userDislikes)
+          else if(this.userLikesArray.indexOf(likedArticlesId) == -1 && this.userDislikesArray.indexOf(likedArticlesId) != -1) {
+            likeButton[i].classList.add("hasNotLikedButton");
+            dislikeButton[i].classList.add("hasDislikedButton");
+          } 
+          // Si l'utilisateur n'a pas voté pour cet article (id de l'article absent des tableaux userLikes et userDislikes)
+          else if(this.userLikesArray.indexOf(likedArticlesId) == -1 && this.userDislikesArray.indexOf(likedArticlesId) == -1) {
+            dislikeButton[i].classList.add("hasNotDislikedButton");
+            likeButton[i].classList.add("hasNotLikedButton");
+          }
+          else {
+            console.log("Alors là il y a un problème -_- !");
+          }
+        }
+      }
+    })
+    .catch(error => console.log(error));
   }, 
-
-  // updated() {    
-  //   document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
-  //   if(localStorage.getItem("userId")>=1 && localStorage.getItem("userStatus") === "Online") {
-  //     let storedUserId = localStorage.getItem("userId");
-  //     axios.get("http://localhost:3000/api/users/" + storedUserId)
-  //     .then(res => {
-  //       // console.log(res);
-  //       this.username = res.data.username;
-  //     })
-  //   }
-  // },
-  // beforeUpdate() {
-  //   if(localStorage.getItem("userStatus") === "Online") {
-  //     localStorage.setItem("temp", this.accessToken);
-  //   }
-  // },
 }
 </script>
 
@@ -536,10 +820,10 @@ export default {
     width: 5em;
     height: 1.65em;
   }
-  & .likeButton {
+  & .hasLikedButton {
     background-color: rgb(76, 212, 149);
   }
-  & .dislikeButton {
+  & .hasDislikedButton {
     // background-color: rgb(230, 105, 105);
     background-color: lighten($color-primary, 5);
   }
@@ -556,12 +840,14 @@ export default {
     border-radius: 3em;
     margin: 0.2em 0.3em;
     border: 0.1em black solid;
+    cursor: pointer;
     & p {
       margin: 0 0.4em;
       padding-bottom: 0.2em;
       font-weight: bold;
       color: black;
       display: inline-block;
+      pointer-events: none;
     }
   }
   & .deleteArticleButton,
@@ -599,6 +885,7 @@ export default {
     & svg {
       height: 1.35em;
       fill:black;
+      pointer-events: none;
     }
     &__photoContainer {
       @include full-width;
@@ -606,7 +893,7 @@ export default {
     }
     &__photo {
       object-fit: cover;
-      width: 81vw;
+      width: 72vw;
       height: 65vw;
       min-width: 9em;
       min-height: 10em;
@@ -650,7 +937,7 @@ export default {
       font-family: $font-primary;
       font-size: 1em;
       color: black;
-      width: 75vw;
+      width: 66vw;
       min-width: 9em;
       // height: 2.5em;
       margin-top: 0.3em;
@@ -662,6 +949,18 @@ export default {
       @include inter-only {
         max-width: 23em;
       }
+      // & .smallCommentsButtons {
+      //   font-size: 0.8em;
+      //   font-weight: bold;
+      //   font-family: $font-primary;
+      //   width: auto;
+      //   height: auto;
+      //   color: black;
+      //   background-color: $color-secondary;
+      //   border: 0.1em solid black;
+      //   border-radius: 0.7em;
+      //   cursor: pointer;
+      // }
     }
     &__modify {
       display: none;
@@ -669,6 +968,3 @@ export default {
   }
 }
 </style>
-
-
-

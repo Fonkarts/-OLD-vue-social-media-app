@@ -32,6 +32,8 @@ module.exports = app => {
     router.put("/:id", auth.verifyToken, articles.modifyArticle);
     // Delete a Tutorial with id
     router.delete("/:id", auth.verifyToken, articles.deleteArticle);
+    // Mets à jour les likes/dislikes d'un article
+    router.put("/likes/:id", auth.verifyToken, articles.likeArticle);
 
     app.use('/api/articles', router);
   };
