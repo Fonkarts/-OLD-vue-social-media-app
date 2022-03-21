@@ -43,6 +43,7 @@ export default {
             let userToken = res.data.accessToken;
             localStorage.setItem("userStatus", "Online");
             localStorage.setItem("userId", userId);
+            localStorage.setItem("userRole", res.data.role[0])
             this.$emit("user-incoming", {
                 userName,
                 userToken,

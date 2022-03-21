@@ -25,6 +25,7 @@ require('./routes/userRoutes')(app);
 require("./routes/articleRoutes")(app);
 require("./routes/commentRoutes")(app);
 require("./routes/likesRoutes")(app);
+require("./routes/moderatorRoutes")(app);
 
 const db = require("./models");
 const Role = db.role; 

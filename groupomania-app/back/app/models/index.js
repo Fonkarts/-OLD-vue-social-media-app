@@ -34,16 +34,6 @@ db.user.belongsToMany(
   foreignKey: "userId",
   otherKey: "roleId"
   }
-  // db.article, {
-  //   through: "user_articles",
-  //   foreignKey: "userId",
-  //   otherKey: "articleId"
-  // },
-  // db.comment, {
-  //   through: "user_comments",
-  //   foreignKey: "userId",
-  //   otherKey: "commentId"
-  //   }
 );
 
 db.article.belongsToMany(
@@ -52,11 +42,6 @@ db.article.belongsToMany(
   foreignKey: "articleId",
   otherKey: "userId"
   }
-  // db.comment, {
-  //   through: "article_comments",
-  //   foreignKey: "articleId",
-  //   otherKey: "commentId"
-  // }
 );
 db.user.belongsToMany(db.article, {
 through: "user_articles",
@@ -70,11 +55,6 @@ db.comment.belongsToMany(
   foreignKey: "commentId",
   otherKey: "userId"
   }
-  // db.article, {
-  //   through: "article_comments",
-  //   foreignKey: "commentId",
-  //   otherKey: "articleId"
-  // }
 );
 db.user.belongsToMany(db.comment, {
 through: "user_comments",

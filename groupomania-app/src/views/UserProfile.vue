@@ -71,12 +71,6 @@ export default {
             emailChecked: "",
         }
     },
-    // computed: function() {
-    //     return {
-
-    //     }
-
-    // },
     methods: {
         showFileSelector() {
             if(this.userModifiesPhoto == false) {
@@ -129,6 +123,7 @@ export default {
                     username: document.querySelector(".userProfile__newUsernameInput").value
                 }})
                 .then(() => {
+                    localStorage.setItem("username", document.querySelector(".userProfile__newUsernameInput").value)
                     this.$router.go(this.$router.currentRoute)
                 })
                 .catch(error => console.log(error));
@@ -177,58 +172,44 @@ export default {
         },
         deleteUserAccount() {
             // if localStorage status online...
-            axios.delete("http://localhost:3000/api/users/" + this.userId)
-            .then(() => {
-                alert("Votre compte a bien été supprimé !")
-                this.$emit("user-account-deleted");
-                window.location.replace("/#/");
-            })
+            if(localStorage.getItem("userStatus") == "Online") {
+                console.log(this.username);
+                axios.delete("http://localhost:3000/api/users/" + this.userId, {data: {
+                    username: this.username
+                }})
+                .then(() => {
+                    alert("Votre compte a bien été supprimé !")
+                    this.$emit("user-account-deleted");
+                    window.location.replace("/#/");
+                })
+                .catch(error => console.log(error));
+            }
         }
     },
     mounted() {
-        this.username = localStorage.getItem("username");
-        this.userId = JSON.parse(localStorage.getItem("userId"));
-        console.log(this.userId);
-        console.log(this.username);
-        axios.get("http://localhost:3000/api/users/" + this.userId)
-        .then(res => {
-            console.log(res);
-            this.username = res.data.username;
-            this.userEmail = res.data.userEmail;
-            let userProfileMail = document.querySelector(".userProfile__email");
-            userProfileMail.innerHTML = "Adresse e-mail: " + this.email;
-            let userProfilePhoto = document.querySelector(".userProfile__photo");
-            if(res.data.userPhoto != "") {
-                this.userPhoto = res.data.userPhoto;
-                this.showUserPhoto = true;
-                console.log(this.userPhoto);
-                userProfilePhoto.setAttribute("src", "http://localhost:3000/images/" + this.userPhoto);
-            }// else {
-                // this.userPhoto = "";
-            // }
-        })
-        .catch(error => console.log(error));
-
-        if(this.userPhoto != "") {
+        if(localStorage.getItem("userStatus") === "Online") {
+            this.username = localStorage.getItem("username");
+            this.userId = localStorage.getItem("userId");
+            axios.get("http://localhost:3000/api/users/" + this.userId)
+            .then(res => {
+                this.userEmail = res.data.userEmail;
+                let userProfileMail = document.querySelector(".userProfile__email");
+                userProfileMail.innerHTML = "Adresse e-mail: " + this.email;
+                let userProfilePhoto = document.querySelector(".userProfile__photo");
+                if(res.data.userPhoto != "" && res.data.userPhoto != null) {
+                    this.userPhoto = res.data.userPhoto;
+                    this.showUserPhoto = true;
+                    userProfilePhoto.setAttribute("src", "http://localhost:3000/images/" + this.userPhoto);
+                }
+            })
+            .catch(error => console.log(error));
+        }
+        if(this.userPhoto != "" && this.userPhoto != null) {
             this.showUserPhoto = true;
         } else {
             this.showUserPhoto = false;
         }
     },
-    updated() {
-        // this.username = localStorage.getItem("username");
-        // console.log(this.username);
-        // axios.get("http://localhost:3000/api/users/" + this.username)
-        // .then(res => {
-        //     this.email = res.data.userEmail;
-        //     this.userPhoto = res.data.userPhoto;
-        //     // let userProfileMail = document.querySelector(".userProfile__email");
-        //     // userProfileMail.innerHTML = "Adresse e-mail: " + this.email;
-        //     let userProfilePhoto = document.querySelector(".userProfile__photo");
-        //     userProfilePhoto.setAttribute("src", "http://localhost:3000/images/" + this.userPhoto);
-        // })
-        // .catch(error => console.log(error));
-    }
 }
 </script>
 

@@ -4,15 +4,17 @@
 
       <img class="nav__logo" alt="Logo Groupomania" src="./assets/icon-left-font-monochrome-white.svg"><br>
 
-      <router-link v-if="!this.userIsLogged" to="/signup">Créer un compte</router-link> 
+      <router-link v-if="!this.userIsLogged" to="/signup">Inscription</router-link> 
       <span v-if="!this.userIsLogged"> | </span>
-      <router-link v-if="!this.userIsLogged" to="/">Se connecter</router-link>
+      <router-link v-if="!this.userIsLogged" to="/">Connexion</router-link>
 
       <router-link v-if="this.userIsLogged" to="/home">Accueil</router-link> 
       <span v-if="this.userIsLogged"> | </span>
       <router-link v-if="this.userIsLogged" to="/userprofile">Profil</router-link>
       <span v-if="this.userIsLogged"> | </span>
-      <router-link v-if="this.userIsLogged" @click="userIsLoggingOut()" to="/">Se déconnecter</router-link>
+      <router-link v-if="this.userIsLogged" @click="userIsLoggingOut()" to="/">Déconnexion</router-link>
+      <br><br>
+      <router-link v-if="this.userIsModerator" to="/moderator">Modération</router-link>
   </div>
 
   <router-view 
@@ -37,6 +39,8 @@ export default {
       userId: "",
       userEmail: "",
       userPhoto: "",
+      userIsModerator: false,
+      moderatorIsLogged: false,
     }
   },
 
@@ -58,36 +62,9 @@ export default {
       localStorage.setItem("userStatus", "Offline");
       this.userIsLogged = false;
       this.username = "";
+      this.userIsModerator = false;
       window.location.replace("/#/");
     },
-    // addArticleLike(res) {
-    //   let currentArticleId = res.currentArticleId;
-    //   console.log(currentArticleId);
-    //   let userId = this.userId;
-    //   axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
-    //     userId: userId,
-    //     like: 1 
-    //     }})
-    //   .then(() => {
-    //     console.log("like ajouté à articles !");
-    //     this.$router.go(this.$router.currentRoute)
-    //   })
-    //   .catch(error => console.log(error));
-    // },
-    // removeArticleLike(res) {
-    //   let currentArticleId = res.currentArticleId;
-    //   console.log(currentArticleId);
-    //   let userId = this.userId;
-    //   axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
-    //     userId: userId,
-    //     like: 0 
-    //     }})
-    //   .then(() => {
-    //     console.log("like ajouté à articles !");
-    //     this.$router.go(this.$router.currentRoute)
-    //   })
-    //   .catch(error => console.log(error));
-    // }
   },
   mounted() {
     
@@ -107,23 +84,19 @@ export default {
     if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
       this.userId = JSON.parse(localStorage.getItem("userId"));
       this.username = localStorage.getItem("username");
-    //   axios.get("http://localhost:3000/api/users/" + this.username)
-    //   .then(res => {
-    //     this.username = res.data.username;
-    //     console.log(this.username);
-    //   })
     }
+    if(this.userIsLogged === true && localStorage.getItem("userRole") === "moderator") {
+      this.userIsModerator = true;
+    }
+    
     
   },
   updated() {
-    // CONDITION ONLINE !!!!
     if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
       this.username = localStorage.getItem("username");
-      // let storedUserId = localStorage.getItem("userId");
-      // axios.get("http://localhost:3000/api/users/" + storedUserId)
-      // .then(res => {
-      //   this.username = res.data.username;
-      // })
+    }
+    if(this.userIsLogged === true && localStorage.getItem("userRole") === "moderator") {
+      this.userIsModerator = true;
     }
   },
   beforeUpdate() {

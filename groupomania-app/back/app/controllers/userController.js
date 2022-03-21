@@ -12,22 +12,28 @@ exports.moderatorBoard = (req, res) => {
     res.status(200).json({message:"Contenu Modérateur"});
 };
 exports.getUser = (req, res) => {
-  User.findOne({where: {id: req.params.id}})
-  .then(user => {
-    res.status(200).json( {
-      userId: user.id,
-      username: user.username,
-      userEmail: user.email,
-      userPhoto: user.photo,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    })
-  })
-  .catch(error => res.status(400).json({ error }));
+    User.findOne({where: {id: req.params.id}})
+      .then(user => {
+        if(!user) {
+          return res.status(404).json({message: "Utilisateur non trouvé !"});
+        }
+          res.status(200).json({
+            userId: user.id,
+            username: user.username,
+            userEmail: user.email,
+            userPhoto: user.photo,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+          })
+      })
+      .catch(() => res.status(500).json({message: "Problème avec le renvoi des informations utilisateur !"}));
 };
 exports.getAllUsers = (req, res) => {
   User.findAll()
   .then(users => {
+    if(!users) {
+      return res.status(404).json({message: "Utilisateur non trouvé !"});
+    }
     res.status(200).json(users.id, users.email, users.createdAt, users.updatedAt) 
   })
   .catch(error => res.status(400).json({ error }));
@@ -52,7 +58,7 @@ exports.modifyUser = (req, res) => {
             .then(() => res.status(200).json({message: "Informations de compte modifiées !"}))
             .catch(error => res.status(400).json({error}));
   })
-  .catch(error => res.status(400).json({error}));
+  .catch(() => res.status(400).json({message: "Problème avec la modification des informations utilisateur !"}));
 };
 
 exports.deleteUser = (req, res) => {
@@ -61,7 +67,7 @@ exports.deleteUser = (req, res) => {
       if(!user) { // Si l'utilisateur n'existe pas...
           return res.status(404).json({message: "Utilisateur non trouvé !"});
       };
-      if(user.id != req.params.id) { // Si la requête n'est pas envoyée par la personne ayant créé la sauce...
+      if(user.username != req.body.username) { // Si la requête n'est pas envoyée par la personne ayant créé la sauce...
           return res.status(403).json({message: "Requête non autorisée !"});
       } 
       User.findOne({id: req.params.id})

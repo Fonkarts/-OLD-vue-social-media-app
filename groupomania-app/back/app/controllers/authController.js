@@ -21,11 +21,10 @@ exports.signUp = (req, res) => {
       photo: req.body.photo
     })
       .then(user => {
-        if (req.body.roles) {
-          Role.findAll({where: {name: {[Op.or]: req.body.roles}
-          }})
-          .then(roles => {
-            user.setRoles(roles)
+        if (req.body.role) {
+          Role.findAll({where: {name: req.body.role}})
+          .then(role => {
+            user.setRoles(role)
             .then(() => {
               res.status(200).json({message: "Utilisateur enregistré !"});
             })
@@ -63,19 +62,18 @@ exports.signUp = (req, res) => {
             config.secret, 
             {expiresIn: "24h"}
           );
-        // req.headers.authorization = token;
         let authorities = [];
         user.getRoles()
-        .then(roles => {
-          for (let i = 0; i < roles.length; i++) {
-            authorities.push("ROLE_" + roles[i].name.toUpperCase());
+        .then(role => {
+          for (let i = 0; i < role.length; i++) {
+            authorities.push(role[i].name);
           }
           res.status(200).json({
             id: user.id,
             username: user.username,
             email: user.email,
             photo: user.photo,
-            roles: authorities,
+            role: authorities,
             accessToken: token,
           });
         })

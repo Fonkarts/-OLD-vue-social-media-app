@@ -11,21 +11,6 @@ exports.createComment = (req, res) => { // PENSER à faire vérifs required dans
     Comment.create({...req.body})
     .then(() => {
         res.status(201).json({message: "Commentaire créé !"});
-
-        // User.findOne({where: {username: req.body.userId}})
-        // .then(user => {
-        //     comment.setUsers(user);
-        //     console.log("TEST2");
-        //     res.status(201).json(comment + user + "Commentaire créé !");
-        //     Article.findOne({where: {id: req.body.articleId}})
-        //     .then(article => {
-        //         console.log("TEST4");
-        //         comment.setArticles(article);
-        //         res.status(201).json(comment + user + article + "Commentaire créé !");
-        //     })
-        //     .catch(error => res.status(401).json({ error }));
-        // })
-        // .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 };

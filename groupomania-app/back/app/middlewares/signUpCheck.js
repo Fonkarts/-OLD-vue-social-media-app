@@ -22,13 +22,13 @@ checkExistingNameOrEmail = (req, res, next) => {
 };
 
 checkExistingRole = (req, res, next) => {
-  if (req.body.roles) {
-    for (let i = 0; i < req.body.roles.length; i++) {
-      if (!ROLES.includes(req.body.roles[i])) {
-        res.status(400).json({message: "Ce rôle n'existe pas = " + req.body.roles[i]});
+  if (req.body.role) {
+    // for (let i = 0; i < req.body.roles.length; i++) {
+      if (!ROLES.includes(req.body.role)) {
+        res.status(400).json({message: "Ce rôle n'existe pas = " + req.body.role});
         return;
       }
-    }
+    // }
   }
   next();
 };

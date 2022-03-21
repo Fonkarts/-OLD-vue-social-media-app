@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(500)
         },
         userId: {
-            type: Sequelize.STRING
+            type: Sequelize.INTEGER
         },
         username: {
             type: Sequelize.STRING

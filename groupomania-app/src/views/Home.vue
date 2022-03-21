@@ -21,7 +21,7 @@
               </div>
 
               <label for="fileSelector">Ajouter une image/photo/gif</label>
-              <input type="file" id="fileSelector" class="input home__newArticleFileSelector" @change="getFileName()">
+              <input type="file" id="fileSelector" class="input home__newArticleFileSelector" @change="displayNewArticlePhoto()">
 
               <textarea v-model="newArticle.description" type="text" class="input article__writeCommentSection" placeholder="Écrivez une description..."></textarea>
             </form>          
@@ -54,14 +54,13 @@
 
           <button class="shareButton">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M448 127.1C448 181 405 223.1 352 223.1C326.1 223.1 302.6 213.8 285.4 197.1L191.3 244.1C191.8 248 191.1 251.1 191.1 256C191.1 260 191.8 263.1 191.3 267.9L285.4 314.9C302.6 298.2 326.1 288 352 288C405 288 448 330.1 448 384C448 437 405 480 352 480C298.1 480 256 437 256 384C256 379.1 256.2 376 256.7 372.1L162.6 325.1C145.4 341.8 121.9 352 96 352C42.98 352 0 309 0 256C0 202.1 42.98 160 96 160C121.9 160 145.4 170.2 162.6 186.9L256.7 139.9C256.2 135.1 256 132 256 128C256 74.98 298.1 32 352 32C405 32 448 74.98 448 128L448 127.1zM95.1 287.1C113.7 287.1 127.1 273.7 127.1 255.1C127.1 238.3 113.7 223.1 95.1 223.1C78.33 223.1 63.1 238.3 63.1 255.1C63.1 273.7 78.33 287.1 95.1 287.1zM352 95.1C334.3 95.1 320 110.3 320 127.1C320 145.7 334.3 159.1 352 159.1C369.7 159.1 384 145.7 384 127.1C384 110.3 369.7 95.1 352 95.1zM352 416C369.7 416 384 401.7 384 384C384 366.3 369.7 352 352 352C334.3 352 320 366.3 320 384C320 401.7 334.3 416 352 416z"/></svg>
-            <!-- Partager -->
           </button> 
 
           <p class="article__description"></p>
 
           <div class="article__commentsSection">
             <button class="article__displayCommentsButton">Afficher les commentaires</button>
-            <div class="article__readCommentsSection"> 
+            <div class="article__readCommentsSection">
             </div>
 
             <textarea type="text" class="input article__writeCommentSection" placeholder="Écrivez un commentaire..."></textarea>
@@ -73,21 +72,18 @@
 
           <div class="article__modify home__newArticle">  
             <form class="article__modifyForm">
-              <p class="article__modifyDisclaimer">Merci de renseigner à nouveau ces champs :</p>
+              <p class="article__modifyDisclaimer">Vous pouvez modifier un ou plusieurs de ces champs :</p>
               <textarea type="text" class="input home__newArticleTitle" ref="newArticleTitle" placeholder="Renseignez un nouveau titre..."></textarea>
-            
-              <!-- <div class="article__photoContainer">
-                <img src=" " class="article__modifyPhoto home__newArticlePhoto article__photo">
-              </div> -->
 
-              <label for="fileSelector">Modifier votre image/photo/gif</label>
-              <input type="file" id="fileSelector" class="input article__modifyArticleFileSelector home__newArticleFileSelector">
+              <img src="*" class="modifiedArticlePhoto">
+
+              <label for="modifyFileSelector">Modifiez votre image/photo/gif</label>
+              <input type="file" id="modifyFileSelector" class="input article__modifyArticleFileSelector home__newArticleFileSelector">
 
               <textarea type="text" class="input article__writeCommentSection" placeholder="Écrivez une nouvelle description..."></textarea>
             </form>          
-          
             <button class="home__cancelNewArticleButton">Annuler</button>
-            <button class="home__confirmNewArticleButton">Envoyer</button>
+            <button class="home__confirmNewArticleButton">Confirmer</button>
           </div> 
 
         </article>
@@ -107,34 +103,44 @@ export default {
       username: "",
       userCreatesNewArticle: false,
       showNewArticlePhoto: false,
+
       userModifiesArticle: false,
+      showModifiedArticlePhoto: false,
+
       userReadsComments: false,
       userModifiesComment: false,
+
+      userIsModerator: false,
+
       userEverVotedArray: [],
       userLikesArray: [],
       userDislikesArray: [],
 
-      // newComment: "",
       newArticle: {
         title: "",
         description: "",
         imageUrl: "",
         userId: "",
-        username: "",
+        username: ""
       },
       article: {
         id: "",
         title: "",
         description: "",
         imageUrl: "",
+        username: "",
         userId: ""
       },
       comment: {
-        // id: "",
         text: "",
         userId: "",
         username: "",
-        articleId: "",
+        articleId: ""
+      },
+      modified: {
+        title: "",
+        imageUrl: "" ,
+        description: ""
       }
     }
   },
@@ -147,7 +153,7 @@ export default {
         this.userCreatesNewArticle = false;
       }
     },
-    getFileName() {
+    displayNewArticlePhoto() {
       let fileSelector = document.querySelector("#fileSelector");
       let newArticlePhoto = document.querySelector(".home__newArticlePhoto");
       this.newArticle.imageUrl = fileSelector.files[0].name;
@@ -165,7 +171,6 @@ export default {
           this.newArticle.description = "";
           this.newArticle.imageUrl = "";
           this.userCreatesNewArticle = false;
-          console.log(this.article);
           this.$router.go(this.$router.currentRoute)
 
       })
@@ -194,9 +199,6 @@ export default {
               event.target.classList.remove("hasLikedButton");
               event.target.classList.add("hasNotLikedButton");
               this.$router.go(this.$router.currentRoute);
-              console.log(removeLike);
-              console.log("like retiré de likeEntries (modif)");
-              console.log("like retiré d'articles");
             }
           } catch(error) {
               console.log(error);
@@ -223,8 +225,6 @@ export default {
                 event.target.classList.remove("hasNotLikedButton");
                 event.target.classList.add("hasLikedButton");
                 this.$router.go(this.$router.currentRoute);
-                console.log("entrée likesEntries créée: like !");
-                console.log("like ajouté à articles !");
               }
             } catch(error) {
               console.log(error);
@@ -244,8 +244,6 @@ export default {
                 event.target.classList.remove("hasNotLikedButton");
                 event.target.classList.add("hasLikedButton");
                 this.$router.go(this.$router.currentRoute);
-                console.log("entrée likesEntries créée: like !");
-                console.log("like ajouté à articles !");
               }
             } catch(error) {
               console.log(error);
@@ -277,9 +275,6 @@ export default {
               event.target.classList.remove("hasDisikedButton");
               event.target.classList.add("hasNotDikedButton");
               this.$router.go(this.$router.currentRoute);
-              console.log(removeDislike);
-              console.log("dislike retiré de likeEntries (modif)");
-              console.log("dislike retiré d'articles");
             }
           } catch(error) {
               console.log(error);
@@ -306,8 +301,6 @@ export default {
                 event.target.classList.remove("hasNotDislikedButton");
                 event.target.classList.add("hasDislikedButton");
                 this.$router.go(this.$router.currentRoute);
-                console.log("entrée likesEntries créée: dislike !");
-                console.log("dislike ajouté à articles !");
               }
             } catch(error) {
               console.log(error);
@@ -327,8 +320,6 @@ export default {
                 event.target.classList.remove("hasNotDislikedButton");
                 event.target.classList.add("hasDislikedButton");
                 this.$router.go(this.$router.currentRoute);
-                console.log("entrée likesEntries créée: dislike !");
-                console.log("dislike ajouté à articles !");
               }
             } catch(error) {
               console.log(error);
@@ -337,86 +328,6 @@ export default {
         }
       }
     },
-
-    // ------------------------   TEST DISLIKE ORIGINAL ----------------------------
-
-    // sendArticleDislike(event) {
-    //   let currentArticleId = event.target.closest(".article").getAttribute("id");
-    //   let userId = localStorage.getItem("userId");
-
-    //   if(event.target.previousElementSibling.classList.contains("hasLikedButton")) {
-    //     alert("Veuillez retirer votre Like avant de soumettre un Dislike ;) !");
-    //   } else {
-    //     // Si l'utilisateur retire son dislike
-    //     if(event.target.classList.contains("hasDislikedButton")) { 
-
-    //       // Modification de la table des likes/dislikes utilisateurs
-    //       axios.put("http://localhost:3000/api/likes/" + userId, {data:{
-    //         articleId: currentArticleId,
-    //         userDislikes: 0
-    //       }})
-    //         .then(() => {
-    //           console.log("dislike retiré de likesEntries (modif)");
-    //         })
-    //         .catch(error => console.log(error));
-
-    //       // Modification des dislikes de l'article 
-    //       axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
-    //         userId: userId,
-    //         dislike: 0 
-    //       }})
-    //         .then(() => {
-    //           event.target.classList.remove("hasDislikedButton");
-    //           event.target.classList.add("hasNotDislikedButton");
-    //           console.log("dislike retiré d'articles !");
-    //         })
-    //         .catch(error => console.log(error));
-    //     } 
-    //     // Si l'utilisateur soumet un dislike...
-    //     else if(event.target.classList.contains("hasNotDislikedButton")){
-    //       // ... et qu'il n'avait pas encore voté pour cet article...
-    //       if(event.target.previousElementSibling.classList.contains("hasNotLikedButton") 
-    //         && this.userLikesArray.indexOf(currentArticleId) == -1
-    //         && this.userDislikesArray.indexOf(currentArticleId) == -1
-    //         && this.userEverVotedArray.indexOf(currentArticleId) == -1) {
-    //         // Création d'une entrée dans la table des likes/dislikes utilisateurs
-    //         axios.post("http://localhost:3000/api/likes", {data: {
-    //           articleId: currentArticleId,
-    //           userId: userId,
-    //           userLikes: 0,
-    //           userDislikes: 1
-    //         }})
-    //         .then(res => {
-    //           console.log(res);
-    //           console.log("entrée de likesEntries créée : dislike !");
-    //         })
-    //         .catch(error => console.log(error));
-    //       } else { // ... ou s'il avait déjà voté auparavant...
-    //         // Modification de la table des likes/dislikes utilisateurs
-    //         axios.put("http://localhost:3000/api/likes/" + userId, {data:{
-    //           articleId: currentArticleId,
-    //           userDislikes: 1
-    //         }})
-    //           .then(() => {
-    //             console.log("dislike ajouté à likeEntries (modif)");
-    //           })
-    //           .catch(error => console.log(error));
-    //       }
-    //       // Modification des dislikes de l'article 
-    //       axios.put("http://localhost:3000/api/articles/likes/" + currentArticleId, {data:{ 
-    //         userId: userId,
-    //         dislike: 1 
-    //         }})
-    //           .then(() => {
-    //             event.target.classList.remove("hasNotDislikedButton");
-    //             event.target.classList.add("hasDislikedButton");
-    //             console.log("dislike ajouté à article");
-    //           })
-    //           .catch(error => console.log(error));
-    //     }
-    //   }
-    // },
-
     displayCommentsContainer(event) {
       let currentDisplayCommentsButton = event.target;
       let currentArticleId = event.target.closest(".article").getAttribute("id");
@@ -425,12 +336,25 @@ export default {
       if(this.userReadsComments == false) {
         axios.get("http://localhost:3000/api/comments/" + currentArticleId)
         .then(res => {
+          if(res.data.length == 0) {
+            let noCommentMessage = document.createElement("p");
+            currentCommentsSection.appendChild(noCommentMessage);
+            noCommentMessage.textContent = "Aucun commentaire pour l'instant.";
+          }
           for(let i=0; i<res.data.length; i++) {
             // Création du conteneur du commentaire
             let currentComment = document.createElement("div");
             currentCommentsSection.appendChild(currentComment);
             currentComment.className = "article__comment";
             currentComment.setAttribute("id", res.data[i].id)
+
+            // !! \\ 
+            // Il a été ici nécessaire d'attribuer des propriétés CSS via Javascript.
+            // Initialement, les éléments devaient recevoir une classe déjà associée à des propriétés CSS.
+            // Cependant, l'attribution de cette classe se faisant après le chargement du CSS et sans être suivie
+            // d'un rechargement de page, cette solution a été retenue.
+            // Cela concerne cette fonction ainsi que la suivante: "modifyComment"
+            // !! \\ 
 
             currentComment.style.border = "0.1em solid #FF5F6D";
             currentComment.style.borderRadius = "0.5em";
@@ -454,12 +378,10 @@ export default {
 
             currentCommentText.style.margin = "0 0 0.4em 0";
 
-            if(res.data[i].userId == this.userId) {
+            if(res.data[i].userId == this.userId || this.userIsModerator === true) {
             // Création du bouton de suppression du commentaire
-            
               let deleteCommentButton = document.createElement("button");
               currentComment.appendChild(deleteCommentButton);
-              // deleteCommentButton.classList.add("smallCommentsButtons");
               deleteCommentButton.innerHTML = "Supprimer";
               deleteCommentButton.addEventListener("click", this.deleteComment);
 
@@ -473,11 +395,11 @@ export default {
               deleteCommentButton.style.border = "0.1 em black solid";
               deleteCommentButton.style.borderRadius = "0.7em";
               deleteCommentButton.style.cursor = "pointer";
-
+            }
+            if(res.data[i].userId == this.userId) {
             // Création du bouton de modification du commentaire
               let modifyCommentButton = document.createElement("button");
               currentComment.appendChild(modifyCommentButton);
-              // modifyCommentButton.classList.add("smallCommentsButtons");
               modifyCommentButton.innerHTML = "Modifier";
               modifyCommentButton.addEventListener("click", this.modifyComment);
 
@@ -495,6 +417,7 @@ export default {
           }
         })
         .catch(error => console.log(error));
+        
         this.userReadsComments = true;
         currentCommentsSection.style.display = "block";
         currentDisplayCommentsButton.innerHTML = "Fermer les commentaires";
@@ -521,7 +444,6 @@ export default {
         let confirmCommentModificationButton = document.createElement("button");
         currentComment.appendChild(confirmCommentModificationButton);
         confirmCommentModificationButton.innerHTML = "Envoyer";
-        // confirmCommentModificationButton.classList.add("smallCommentsButtons");
 
         confirmCommentModificationButton.style.fontSize = "0.8em";
         confirmCommentModificationButton.style.fontWeight = "bold";
@@ -553,14 +475,27 @@ export default {
       }
     },
     deleteComment(event) {
-      let currentCommentId = event.target.closest(".article__comment").getAttribute("id");
-      axios.delete("http://localhost:3000/api/comments/" + currentCommentId, {data:{
-        userId: this.userId
-        }})
-       .then(() => {
-          this.$router.go(this.$router.currentRoute)
-        })
-      .catch(error => console.log(error));    
+      if(this.userIsModerator === true) {
+        let currentCommentId = event.target.closest(".article__comment").getAttribute("id");
+        axios.delete("http://localhost:3000/api/moderator/comments/" + currentCommentId, {data:{
+          userId: this.userId,
+          isModerator: this.userIsModerator
+          }})
+        .then(() => {
+            this.$router.go(this.$router.currentRoute)
+          })
+        .catch(error => console.log(error)); 
+      } else {
+        let currentCommentId = event.target.closest(".article__comment").getAttribute("id");
+        axios.delete("http://localhost:3000/api/comments/" + currentCommentId, {data:{
+          userId: this.userId
+          }})
+        .then(() => {
+            this.$router.go(this.$router.currentRoute)
+          })
+        .catch(error => console.log(error));
+      }
+    
     },
     sendComment(event) {
       if(this.newComment != "") {
@@ -578,12 +513,28 @@ export default {
       }
     },
     deleteArticle(event) {
-      let currentArticleId = event.target.closest(".article").getAttribute("id");
-      axios.delete("http://localhost:3000/api/articles/" + currentArticleId,{data: {userId: this.userId}})
-       .then(() => {
-          this.$router.go(this.$router.currentRoute)
-        })
-      .catch(error => console.log(error));
+      if(this.userIsModerator === true) {
+        let currentArticleId = event.target.closest(".article").getAttribute("id");
+        axios.delete("http://localhost:3000/api/moderator/articles/" + currentArticleId, {data:{
+          userId: this.userId,
+          isModerator: this.userIsModerator
+        }})
+        .then(() => {
+            this.$router.go(this.$router.currentRoute)
+          })
+        .catch(error => console.log(error));
+      } else {
+        let currentArticleId = event.target.closest(".article").getAttribute("id");
+        let userId = this.userId;
+        axios.delete("http://localhost:3000/api/articles/" + currentArticleId, {data: {
+          userId
+        }})
+        .then(() => {
+            this.$router.go(this.$router.currentRoute)
+          })
+        .catch(error => console.log(error));
+      }
+
     },
     modifyArticle(event) {
       
@@ -592,7 +543,8 @@ export default {
         let modifyContainer = event.target.nextElementSibling;
         modifyContainer.style.borderRadius = "0.7em";
         modifyContainer.style.display = "block";
-        let currentArticleId = event.target.closest(".article").getAttribute("id");
+        let currentArticle = event.target.closest(".article");
+        let currentArticleId = currentArticle.getAttribute("id");
 
         let modifyForm = document.querySelector("#modifyForm" + currentArticleId);
         modifyForm.children[1].style.margin = "0.2em auto 0.5em auto";
@@ -601,18 +553,50 @@ export default {
         let userId = this.userId;     
         const reloadPage= () => {this.$router.go(this.$router.currentRoute)};
 
+        let fileSelector = modifyForm.children[4];
+        let modifiedPhoto = modifyForm.children[2];
+        modifiedPhoto.style.display = "none";
+        
+        fileSelector.addEventListener("change", function() {
+          modifiedPhoto.style.display = "inline-block";
+          modifiedPhoto.src = "http://localhost:3000/images/" + fileSelector.files[0].name;
+        });
+
         let cancelArticleModificationButton = modifyContainer.children[1];
         cancelArticleModificationButton.addEventListener("click", function() {
           reloadPage();
         });
 
         let confirmModifiedArticleButton = modifyContainer.children[2];
+        let modifiedTitle = "";
+        let modifiedImageUrl = "";
+        let modifiedDescription = "";
         confirmModifiedArticleButton.addEventListener("click", function() {
+          if(modifyForm.children[1].value == "") {
+            modifiedTitle = currentArticle.children[0].value;
+          } 
+            else if (modifyForm.children[1].value != undefined) {
+            modifiedTitle = modifyForm.children[1].value;
+          }
+          if(fileSelector.files[0] == undefined) {
+            let currentArticlePhotoContainer = currentArticle.children[2];
+            let currentPhoto = currentArticlePhotoContainer.querySelector(".article__photo");
+            modifiedImageUrl = currentPhoto.getAttribute("src").split("/images/")[1];
+          } 
+            else if (fileSelector.files[0].name != undefined) {
+            modifiedImageUrl = fileSelector.files[0].name;
+          }
+          if(modifyForm.children[5].value == "") {
+            modifiedDescription = currentArticle.children[6].value;
+          } 
+            else if(modifyForm.children[5].value != undefined) {
+            modifiedDescription = modifyForm.children[5].value;
+          }
           axios.put("http://localhost:3000/api/articles/" + currentArticleId, {data:{
             userId: userId,
-            title: modifyForm.children[1].value,
-            imageUrl: modifyForm.children[3].files[0].name,
-            description: modifyForm.children[4].value
+            title: modifiedTitle,
+            imageUrl: modifiedImageUrl,
+            description: modifiedDescription
           }})
           .then(() => {
             reloadPage();
@@ -623,24 +607,50 @@ export default {
     }
   },
   mounted() {
+    this.userId = JSON.parse(localStorage.getItem("userId"));
     this.username = localStorage.getItem("username"); 
-    this.userId = JSON.parse(localStorage.getItem("userId"));   
     document.querySelector(".disclaimer").innerHTML = "Bienvenue " + this.username + " !";
+    if(localStorage.getItem("userRole") === "moderator") {
+      this.userIsModerator = true;
+    }
+    // Récupération des Likes et Dislikes de l'utilisateur + stockage des articleId
+    const userId = localStorage.getItem("userId");
+    axios.get("http://localhost:3000/api/likes/" + userId)
+    .then(res => {
+      let likesDislikesArray = res.data.articlesLiked;
+      for(let i=0; i<likesDislikesArray.length; i++) {
+
+        if(likesDislikesArray[i].userId == userId) {
+          this.userEverVotedArray.push(likesDislikesArray[i].articleId);
+        }
+        if(likesDislikesArray[i].userId == userId 
+        && likesDislikesArray[i].userLikes == 1) {
+          this.userLikesArray.push(likesDislikesArray[i].articleId);
+        } 
+        else if (likesDislikesArray[i].userId == userId 
+        && likesDislikesArray[i].userDislikes == 1) {
+          this.userDislikesArray.push(likesDislikesArray[i].articleId);
+        }
+      }
+    })
+    .catch(error => console.log(error));
+
+    // Récupération des données des articles + création du fil d'actus
     axios.get("http://localhost:3000/api/articles")
     .then(res => {
       if(res.status == 200) {
         let n=1; 
         while(n < res.data.length) {
+          // Création d'articles supplémentaires selon le nombre de produits sélectionnés (article pré-existant dans HTML conservé, d'où n=1)
           const clonedArticle = document.querySelector(".contentContainer > article").cloneNode(true);
           document.querySelector(".contentContainer").appendChild(clonedArticle);
           n++;
-          // Création d'articles supplémentaires selon le nombre de produits sélectionnés (article pré-existant dans HTML conservé, d'où n=1)
         }
         for(let i=0; i < res.data.length; i++) {
-          // Attribution d'un articleId correspondant à l'id de l'article dans le BDD
-          // let articles = document.querySelectorAll(".articlesOnly")[i];
-          
+
+          // Attribution d'un articleId correspondant à l'id de l'article dans le BDD        
           document.querySelectorAll(".articlesOnly")[i].setAttribute("id", res.data[i].id);
+
           // Titre et description de l'article
           this.article.title = res.data[i].title;
           document.querySelectorAll(".article__title")[i].textContent = this.article.title;
@@ -673,66 +683,24 @@ export default {
           const deleteButtons = document.querySelectorAll(".deleteArticleButton");
           deleteButtons[i].setAttribute("id", "deleteButton" + res.data[i].id);
           deleteButtons[i].addEventListener("click", this.deleteArticle);
-          if(res.data[i].userId != this.userId) {
-            deleteButtons[i].style.display = "none";
+          if(res.data[i].userId == this.userId || this.userIsModerator === true) {
+            deleteButtons[i].style.display = "inline-block";
           } 
           // Bouton de modification de l'article
           const modifyButtons = document.querySelectorAll(".modifyArticleButton");
           modifyButtons[i].setAttribute("id", "modifyButton" + res.data[i].id);
           modifyButtons[i].addEventListener("click", this.modifyArticle);
-          if(res.data[i].userId != this.userId) {
-            modifyButtons[i].style.display = "none";
+          if(res.data[i].userId == this.userId) {
+            modifyButtons[i].style.display = "inline-block";
           } 
           document.querySelectorAll(".article__modifyForm")[i].setAttribute("id", "modifyForm"+ res.data[i].id);
-        }
-      }
-    })
-    .catch(error => console.log(error));
 
-    // Likes et Dislikes de l'utilisateur
-    const userId = localStorage.getItem("userId");
-    axios.get("http://localhost:3000/api/likes/" + userId)
-    .then(res => {
-      // console.log(res);
-      let likesDislikesArray = res.data.articlesLiked;
-      for(let i=0; i<likesDislikesArray.length; i++) {
-
-        if(likesDislikesArray[i].userId == userId) {
-          this.userEverVotedArray.push(likesDislikesArray[i].articleId);
-          console.log("id article ajouté au tableau userEverVoted");
-        }
-        if(likesDislikesArray[i].userId == userId 
-        && likesDislikesArray[i].userLikes == 1) {
-          this.userLikesArray.push(likesDislikesArray[i].articleId);
-          console.log("id article ajouté au tableau userLikes");
-        } 
-        else if (likesDislikesArray[i].userId == userId 
-        && likesDislikesArray[i].userDislikes == 1) {
-          this.userDislikesArray.push(likesDislikesArray[i].articleId);
-          console.log("id article ajouté au tableau userDislikes");
-        }
-        else {
-          console.log("userLikesArray et userDislikesArray vides !");
-        }
-      }
-      // console.log(likesDislikesArray);
-      // console.log(this.userLikesArray);
-      console.log(this.userEverVotedArray);
-    })
-    .catch(error => console.log(error));
-
-    axios.get("http://localhost:3000/api/articles")
-    .then(res => {
-      if(res.status == 200) {
-        for(let i=0; i<res.data.length; i++) {
-          // Bouton like
+          // Boutons like
           const likeButton = document.querySelectorAll(".likeButton");
           likeButton[i].addEventListener("click", this.sendArticleLike);
-
-          // Bouton dislike
+          // Boutons dislike
           const dislikeButton = document.querySelectorAll(".dislikeButton");
           dislikeButton[i].addEventListener("click", this.sendArticleDislike);
-
           // Affichage des likes et dislikes
           const likesCounter = document.querySelectorAll(".likesCount");
           const dislikesCounter = document.querySelectorAll(".dislikesCount");
@@ -755,9 +723,6 @@ export default {
             dislikeButton[i].classList.add("hasNotDislikedButton");
             likeButton[i].classList.add("hasNotLikedButton");
           }
-          else {
-            console.log("Alors là il y a un problème -_- !");
-          }
         }
       }
     })
@@ -765,7 +730,6 @@ export default {
   }, 
 }
 </script>
-
 
 <style lang="scss" scoped>
 @import "../variables.scss";
@@ -807,7 +771,6 @@ export default {
   }
   &__newArticleButton {
     @include button-secondary;
-  
   }
   &__newArticleFileSelector {
     width: 8em;
@@ -858,8 +821,8 @@ export default {
     margin: 0.8em 0.4em;
     width: 8.4em;
     height: 1.5em;
+    display: none;
   }
-
   & .article {
     min-width: 9em;
     padding: 0.5em;
@@ -891,7 +854,8 @@ export default {
       @include full-width;
       margin-bottom: 0.5em;
     }
-    &__photo {
+    &__photo,
+    & .modifiedArticlePhoto {
       object-fit: cover;
       width: 72vw;
       height: 65vw;
@@ -939,7 +903,6 @@ export default {
       color: black;
       width: 66vw;
       min-width: 9em;
-      // height: 2.5em;
       margin-top: 0.3em;
       padding: 0.4em;
       border-radius: 0.8em;
@@ -949,21 +912,12 @@ export default {
       @include inter-only {
         max-width: 23em;
       }
-      // & .smallCommentsButtons {
-      //   font-size: 0.8em;
-      //   font-weight: bold;
-      //   font-family: $font-primary;
-      //   width: auto;
-      //   height: auto;
-      //   color: black;
-      //   background-color: $color-secondary;
-      //   border: 0.1em solid black;
-      //   border-radius: 0.7em;
-      //   cursor: pointer;
-      // }
     }
     &__modify {
       display: none;
+      & label {
+        margin-top: 1em;
+      }
     }
   }
 }
