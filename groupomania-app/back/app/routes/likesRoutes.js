@@ -1,3 +1,4 @@
+// Import du module de vérification de token
 const auth = require("../middlewares/authJwt");
 
 module.exports = app => {

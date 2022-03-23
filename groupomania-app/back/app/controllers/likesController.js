@@ -9,5 +9,5 @@ exports.getAllLikesFromAnUser = (req, res) => {
         }
         res.status(200).json({articlesLiked});
     })
-    .catch(error => res.status(500).json({ error }));  
+    .catch(() => res.status(500).json({message: "Votes utilisateur non trouvés !"}));  
 }

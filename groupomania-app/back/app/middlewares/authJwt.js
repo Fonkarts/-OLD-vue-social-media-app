@@ -3,9 +3,9 @@ const config = require("../config/authConfig.js");
 const db = require("../models");
 const User = db.user;
 
+  // Vérification du token de l'utilisateur
 verifyToken = (req, res, next) => {
   let token = req.headers.authorization.split(" ")[1];
-
   if (!token) {
     return res.status(403).json({message: "Token inexistant !"});
   }
@@ -17,17 +17,20 @@ verifyToken = (req, res, next) => {
     next();
   });
 };
+// Vérification du status de modérateur
 isModerator = (req, res, next) => {
   User.findByPk(req.userId)
   .then(user => {
     user.getRoles()
     .then(roles => {
+      // Si le rôle de l'utilisateur est "moderator", exécution du middleware suivant
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "moderator") {
           next();
           return;
         }
       }
+      // Sinon, erreur 403
       res.status(403).json({message: "Droits Modérateur requis !"});});
   });
 };

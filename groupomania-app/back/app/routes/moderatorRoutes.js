@@ -1,3 +1,4 @@
+// Import des modules de vérification de token et de statut modérateur
 const auth = require("../middlewares/authJwt");
 
 module.exports = app => {

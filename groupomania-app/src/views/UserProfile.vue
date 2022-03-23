@@ -12,21 +12,21 @@
                 <button class="photoChangeButton" @click="showFileSelector">Ajouter/Modifier votre photo</button>
                 
                 <div v-if="this.userModifiesPhoto" class="fileSelectorContainer">
-                    <label for="fileSelector"></label>
+                    <label for="fileSelector">Sélectionnez votre nouvelle photo :</label>
                     <input type="file" id="fileSelector" class="input userProfile__fileSelector" @change="getFileName()">
                     <button class="confirmPhotoChangeButton" @click="sendNewPhoto()">Confirmer</button>
                 </div>
 
                 <p class="userProfile__name">Nom: {{ username }}</p>
                 <button class="usernameChangeButton" @click="showUsernameModification()">Modifier votre nom</button>
-                <label for="newUsername"></label>
+                <label for="newUsername" v-show="this.userModifiesUsername">Entrez votre nouveau nom :</label>
                 <input v-model="modifiedUsername" v-show="this.userModifiesUsername" type="text" id="newUsername" class="input userProfile__newUsernameInput" @change="usernameCheck()"> 
                 <p :class="{successMsg : usernameChecked, failMsg: !usernameChecked}"></p>
                 <button v-show="this.userModifiesUsername" class="confirmPhotoChangeButton" @click="sendNewUsername()">Confirmer</button>
 
                 <p class="userProfile__email">Adresse mail : {{ userEmail }}</p>
                 <button class="emailChangeButton"  @click="showEmailModification()">Modifier votre adresse mail</button>
-                <label for="newUserEmail"></label>
+                <label for="newUserEmail" v-show="this.userModifiesEmail">Entrez votre nouvelle adresse mail :</label>
                 <input v-model="modifiedEmail" v-show="this.userModifiesEmail" type="text" id="newUserEmail" class="input userProfile__newUserEmailInput" @change="emailCheck()"> 
                 <p :class="{successMsg : emailChecked, failMsg: !emailChecked}"></p>
                 <button v-show="this.userModifiesEmail" class="confirmPhotoChangeButton" @click="sendNewEmail()">Confirmer</button>
@@ -72,6 +72,7 @@ export default {
         }
     },
     methods: {
+        // Affiche l'espace de modification de la photo utilisateur
         showFileSelector() {
             if(this.userModifiesPhoto == false) {
                 this.userModifiesPhoto = true;
@@ -79,6 +80,7 @@ export default {
                 this.userModifiesPhoto = false;
             }
         },
+        // Récupération du nom du fichier photo, stockage et utilisation
         getFileName() {
             let fileSelector = document.querySelector("#fileSelector");
             let newUserPhoto = document.querySelector(".userProfile__photo");
@@ -88,6 +90,7 @@ export default {
             this.showUserPhoto = true;
             }
         },
+        // Requête de modification de la photo utilisateur
         sendNewPhoto() {
             axios.put("http://localhost:3000/api/users/" + this.userId, {data: {
                 photo: this.userPhoto
@@ -97,6 +100,7 @@ export default {
             })
             .catch(error => console.log(error));
         },
+        // Affichage de l'espace de modification du nom de l'utilisateur
         showUsernameModification() {
             if(this.userModifiesUsername == false) {
                 this.userModifiesUsername = true;
@@ -104,6 +108,7 @@ export default {
                 this.userModifiesUsername = false;
             }
         },
+        // Vérification par Expression Régulière
         usernameCheck: function() {
             let userNameInput = document.querySelector(".userProfile__newUsernameInput");
             let textRegex = new RegExp("^((([A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+[ | -]{1}[A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+)+)|([A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+))$", "g", "i");
@@ -117,6 +122,7 @@ export default {
                 this.usernameChecked = false;
             }
         },
+        // Requête de modification du nom de l'utilisateur
         sendNewUsername() {
             if(this.usernameChecked == true) {
                 axios.put("http://localhost:3000/api/users/" + this.userId, {data: {
@@ -129,6 +135,7 @@ export default {
                 .catch(error => console.log(error));
             }
         },
+        // Affichage de l'espace de modification de l'adresse mail de l'utilisateur
         showEmailModification() {
             if(this.userModifiesEmail == false) {
                 this.userModifiesEmail = true;
@@ -136,6 +143,7 @@ export default {
                 this.userModifiesEmail = false;
             }
         },
+        // Vérification par Expression Régulière
         emailCheck: function() {
             let emailInput = document.querySelector(".userProfile__newUserEmailInput");
             let emailRegex = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g");
@@ -147,6 +155,7 @@ export default {
                 this.emailChecked = false
             }
         },
+        // Requête de modification de l'adresse mail de l'utilisateur
         sendNewEmail() {
             if(this.emailChecked == true) {
                 axios.put("http://localhost:3000/api/users/" + this.userId, {data: {
@@ -158,6 +167,7 @@ export default {
                 .catch(error => console.log(error));
             }
         },
+        // Affichage de l'espace de suppression du compte utilisateur
         showDeleteAccountContainer() {
             if(this.userDeletesAccount == false) {
                 this.userDeletesAccount = true;
@@ -165,13 +175,14 @@ export default {
                 this.userDeletesAccount = false;
             }
         },
+        // Fermeture de l'espace de suppression de compte utilisateur
         cancelDeleteAccount() {
             if(this.userDeletesAccount == true) {
                 this.userDeletesAccount = false;
             }
         },
+        // Requête de suppression de compte utilisateur
         deleteUserAccount() {
-            // if localStorage status online...
             if(localStorage.getItem("userStatus") == "Online") {
                 console.log(this.username);
                 axios.delete("http://localhost:3000/api/users/" + this.userId, {data: {
@@ -187,6 +198,7 @@ export default {
         }
     },
     mounted() {
+        // Récupération des données utilisateur afin de rendre la connexion persistante
         if(localStorage.getItem("userStatus") === "Online") {
             this.username = localStorage.getItem("username");
             this.userId = localStorage.getItem("userId");
@@ -283,5 +295,4 @@ export default {
         }
     }
 }
-
 </style>

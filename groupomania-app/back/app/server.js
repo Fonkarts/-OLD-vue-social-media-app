@@ -9,6 +9,7 @@ const corsOptions = {
   allowedHeaders: "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
 };
 
+// Utilise les options de requêtes définies ci-dessus
 app.use(cors(corsOptions));
 
 // Parse les requêtes de content-type - application/json
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // Indique la manière de gérer les dossiers d'images.
 app.use("/images", express.static(path.join(__dirname, "images")));
 
+// Utilisation des routes par l'app
 require('./routes/authRoutes')(app);
 require('./routes/userRoutes')(app);
 require("./routes/articleRoutes")(app);
@@ -30,6 +32,10 @@ require("./routes/moderatorRoutes")(app);
 const db = require("./models");
 const Role = db.role; 
 db.sequelize.sync(
+  // Si décommentées, les lignes ci-dessous vont réinitialiser la BDD au redémarrage du Node 
+  // (donc au ctrl+s avec nodemon)
+  // Commentées, elles permettent une persistance des données
+
   // {force: true})
   // .then(() => {
   // console.log("Drop et re-sync BDD");

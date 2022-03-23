@@ -31,7 +31,6 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 0,
             allowNull: false
         }
-        // FAIRE TABLE INTERMEDIAIRE POUR LISTE UTILISATEURS LIKED ET DISLIKED !
     });
     return Article;
 };

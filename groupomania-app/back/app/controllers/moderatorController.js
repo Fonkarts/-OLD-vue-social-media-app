@@ -5,7 +5,7 @@ const User = db.user;
 const Comment = db.comment;
 const fs = require("fs");
 
-// Supprime un article grâce à son ID (DELETE)
+// Supprime un article grâce à son ID
 exports.moderatorDeleteArticle = (req, res) => {
     Article.findOne({where: {id: req.params.id}})
     .then(article => {
@@ -17,10 +17,11 @@ exports.moderatorDeleteArticle = (req, res) => {
             const filename = article.imageUrl.split("/images/")[1]; // Récupération du nom du fichier
             fs.unlink(`images/${filename}`, () => { // Supprime le fichier du stockage.
             Article.destroy({where: {id: req.params.id}}) 
-            
             .then(() => {
+                // Suppression des entrées de la table "likes" associées à l'article
                 Likes.destroy({where: {articleId: req.params.id}})
                 .then(() => {
+                    // Suppression des entrées de la table "comments" associées à l'article
                     Comment.destroy({where: {articleId: req.params.id}})
                     .then(() => res.status(200).json({message: "Article, likes et commentaires supprimés !"}))
                     .catch(() => res.status(400).json({message: "Problème de suppression des commentaires associés !"}));
@@ -31,9 +32,10 @@ exports.moderatorDeleteArticle = (req, res) => {
             })
         } 
     })
-    .catch(() => res.status(500).json({message: "3333333333333333333333333333 !"}));
+    .catch(() => res.status(500).json({message: "Problème de suppression de l'article !"}));
 };
 
+// Supprime un commentaire grâce à son ID
 exports.moderatorDeleteComment = (req, res) => {
     Comment.findOne({where: {id: req.params.id}})
     .then(comment => {
@@ -43,19 +45,20 @@ exports.moderatorDeleteComment = (req, res) => {
         if(req.body.isModerator === true) { // Si la requête est envoyée par le modérateur...
             Comment.destroy({where: {id: req.params.id}}) 
             .then(() => res.status(200).json({message: "Commentaire supprimé !"}))
-            .catch(error => res.status(400).json({error}));
+            .catch(() => res.status(400).json({message: "Echec de la suppression du commentaire !"}));
         } 
     })
-    .catch(error => res.status(500).json({error}));
+    .catch(() => res.status(500).json({message: "Echec de la suppression du commentaire !"}));
 };
 
+// Renvoie l'adresse mail de l'utilisateur pour contact
 exports.getUserMail = (req, res) => {
     User.findOne({where: {username: req.params.id}})
     .then(user => {
         if(!user) { // Si le commentaire n'existe pas...
-            return res.status(404).json({message: "Commentaire non trouvé !"});
+            return res.status(404).json({message: "Utilisateur non trouvé !"});
         };
         res.status(200).json({userEmail: user.email});
     })
-    .catch(error => res.status(500).json({error}));
+    .catch(() => res.status(500).json({message: "Utilisateur non trouvé !"}));
 };

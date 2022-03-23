@@ -48,6 +48,7 @@ export default {
         }
     },
     methods: {
+        // Vérification du Nom entré à l'aide d'une Expression Régulière
         nameCheck: function () {
             let userNameInput = document.querySelector("#signUp__nameInput");
             let textRegex = new RegExp("^((([A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+[ | -]{1}[A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+)+)|([A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+))$", "g", "i");
@@ -60,6 +61,7 @@ export default {
                 this.usernameChecked = false;
             }
         },
+        // Vérification de l'Adresse Mail entrée à l'aide d'une Expression Régulière
         emailCheck: function () {
             let emailInput = document.querySelector("#signUp__mailInput");
             let emailRegex = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g");
@@ -71,6 +73,7 @@ export default {
                 this.emailChecked = false
             }
         },
+        // Vérification du Mot de Passe entré à l'aide d'une Expression Régulière
         pwCheck: function () {
             let pwInput = document.querySelector("#signUp__passwordInput");
             let textRegex = new RegExp("([A-za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+)", "g", "i");
@@ -82,6 +85,7 @@ export default {
                 this.pwChecked = false
             }
         },
+        // Vérification de la Confirmation du Mot de Passe à l'aide d'une Expression Régulière
         confirmPwCheck: function () {
             let confirmPwInput = document.querySelector("#signUp__confirmPasswordInput");
             if(confirmPwInput.value === document.querySelector("#signUp__passwordInput").value) {
@@ -92,6 +96,7 @@ export default {
                 this.confirmPwChecked = false
             }
         },
+        // Requête SignUp
         sendSignUpData: function() {
             if(this.usernameChecked && this.emailChecked && this.pwChecked && this.confirmPwChecked) {
                 axios.post("http://localhost:3000/api/auth/signup", {
@@ -117,6 +122,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
 </style>

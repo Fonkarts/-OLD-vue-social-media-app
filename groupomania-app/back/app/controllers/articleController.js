@@ -7,7 +7,7 @@ const fs = require("fs");
 const { sequelize } = require("../models");
 
 // Crée et sauvegarde un article (POST)
-exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans FRONT !!
+exports.createArticle = (req, res) => {
     const articleObject = req.file ? // La requête contient-elle un fichier ?
     // Si oui:
     {
@@ -18,48 +18,16 @@ exports.createArticle = (req, res) => { // PENSER à faire vérifs required dans
         .then(article => {
             User.findOne({where: {id: req.body.userId}})
             .then(user => {
+                // Ajout d'une entrée dans la table de liaison "user_articles"
+                // Cette table n'est pas encore en service, mais peut servir à de futures mises à jour
+                // (droits modérateur par exemple)
                 article.setUsers(user);
                 res.status(201).json(articleObject + user);
-                // res.send({user});
-                // res.send({message: "Article créé !"});
             })
-            .catch(error => res.status(400).json({ error }));
-            // User.findAll({where: {username: {[Op.or]: req.body.username}
-            // }})
-            // .then(user => {
-            //   article.setUser(user)
-            //   .then(() => {
-            //     res.status(200).json(articleObject);
-            //     console.log(user);
-            //     res.send({message: "Article créé !"});
-            //   });
-            // });
+            .catch(() => res.status(400).json({message: "Utilisateur non trouvé !"}));
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(() => res.status(500).json({message: "Echec de la création de l'article !"}));
 };
-
-// Met à jour les informations d'un article (UPDATE)
-// exports.modifyArticle = (req, res) => {
-//     Article.findOne({where: {id: req.params.id}})
-//     .then(article => {
-//         if(!article) { // Si l'article n'existe pas...
-//             return res.status(404).json({message: "Article non trouvé !"});
-//         }
-//         if(article.userId != req.body.data.userId) { // Si la requête n'est pas envoyée par la personne ayant créé l'article...
-//             return res.status(403).json({message: "Requête non autorisée !"});
-//         } 
-//         const ArticleObject = req.file ? // La requête contient-elle un fichier ?
-//         // Si oui:
-//         {
-//             ...JSON.parse(req.body.data.article),
-//             imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-//         } : /*Si non: */ {...req.body.data};
-//         Article.update({...ArticleObject}, {where: {id: req.params.id}})
-//             .then(() => res.status(200).json({message: "Article modifié !"}))
-//             .catch(error => res.status(400).json({error}));
-//     })
-//     .catch(error => res.status(500).json({ error }));
-// };
 
 exports.modifyArticle = (req, res) => {
     Article.findOne({where: {id: req.params.id}})
@@ -74,14 +42,13 @@ exports.modifyArticle = (req, res) => {
         // Si oui:
         {
             ...JSON.parse(req.body.data),
-            // imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
             imageUrl: req.body.data.imageUrl
         } : /*Si non: */ {...req.body.data};
         Article.update({...ArticleObject}, {where: {id: req.params.id}})
             .then(() => res.status(200).json({message: "Article modifié !"}))
-            .catch(error => res.status(400).json({error}));
+            .catch(() => res.status(400).json({message: "Echec de la modification d'article ou Requête mal formulée !"}));
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(() => res.status(500).json({message: "Problème lors de la modification de l'article !"}));
 };
 
 // Supprime un article grâce à son ID (DELETE)
@@ -99,8 +66,10 @@ exports.deleteArticle = (req, res) => {
         fs.unlink(`images/${filename}`, () => { // Supprime le fichier du stockage.
             Article.destroy({where: {id: req.params.id}}) 
         .then(() => {
+            // Suppression des entrées associées dans la table "likes"
             Likes.destroy({where: {articleId: req.params.id}})
             .then(() => {
+                // Suppression des entrées associées dans la table "comments"
                 Comment.destroy({where: {articleId: req.params.id}})
                 .then(() => res.status(200).json({message: "Article, likes et commentaires supprimés !"}))
                 .catch(() => res.status(400).json({message: "Problème de suppression des commentaires associés !"}));
@@ -113,23 +82,24 @@ exports.deleteArticle = (req, res) => {
     .catch(() => res.status(500).json({message: "Problème de suppression de l'article !"}));
 };
 
-
-// REFLECHIR A COMMENT INTEGRER LE GET ONE (title, username,etc.) !!!
-
 // Renvoie un article par son ID (GET)
+// Ce middleware n'est pas encore en service, mais peut servir à de futures mises à jour
+// (droits modérateur ou recherche utilisateur par exemple)
 exports.getOneArticle = (req, res) => {
+    //
     Article.findOne({id: req.params.id}) 
     .then(article => res.status(200).json(article))
-    .catch(error => res.status(404).json({ error }));
+    .catch(() => res.status(404).json({message: "Article non trouvé !"}));
 };
 
-// Renvoie tous les articles de la BDD (GETALL)
+// Renvoie tous les articles de la BDD du plus récent au plus ancien (GETALL)
 exports.getAllArticles = (req, res) => {
     Article.findAll({order: [["id", "DESC"]]})
     .then(articles => res.status(200).json(articles))
-    .catch(error => res.status(400).json({error}));
+    .catch(() => res.status(404).json({message: "Articles non trouvés !"}));
 };
 
+// Modifie le compteur de likes/dislikes d'un article et met à jour la table "likes"
 exports.likeArticle = (req, res) => {
     Article.findOne({where: {id: req.params.id}})
     .then(article => {
@@ -137,7 +107,6 @@ exports.likeArticle = (req, res) => {
             return res.status(404).json({message: "Article non trouvé !"});
         }
         Likes.findOne({where: {articleId: req.params.id, userId: req.body.data.userId}})
-        // Likes.findAll({where: {articleId: req.params.id}})
         .then(like => {
 
             // Si l'utilisateur vote pour cet article pour la première fois et que son vote est positif...
@@ -153,9 +122,9 @@ exports.likeArticle = (req, res) => {
                     .then(() => {
                         res.status(201).json({message: "Informations relatives au vote utilisateur créées !"});
                     })
-                    .catch(error => res.status(500).json({ error })); 
+                    .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" })); 
                 })
-                .catch(() => res.status(400).json({ message: "Likes/Dislikes de l'article non modifiés !" }));
+                .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
             }
 
             // Si l'utilisateur vote pour cet article pour la première fois et que son vote est négatif...
@@ -171,12 +140,12 @@ exports.likeArticle = (req, res) => {
                     .then(() => {
                         res.status(201).json({message: "Informations relatives au vote utilisateur créées !"});
                     })
-                    .catch(error => res.status(500).json({ error })); 
+                    .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" })); 
                 })
-                .catch(() => res.status(400).json({ message: "Likes/Dislikes de l'article non modifiés !" }));
+                .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
             }
 
-                // Si l'utilisateur retire son like...
+            // Si l'utilisateur retire son like...
             else if(like.userLikes == 1 && like.userDislikes == 0 && req.body.data.like == 0) {
                 Article.update({likes: sequelize.literal("likes - 1")}, {where: {id: req.params.id}})
                 .then(() => {
@@ -187,9 +156,9 @@ exports.likeArticle = (req, res) => {
                     .then(() => {
                         res.status(200).json({message: "Informations relatives au vote utilisateur modifiées !"});
                     })
-                    .catch(error => res.status(500).json({ error })); 
+                    .catch(() => res.status(500).json({message: "Echec de la mise à jour de la table likes !"})); 
                 })
-                .catch(() => res.status(400).json({ message: "Likes/Dislikes de l'article non modifiés !" }));
+                .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
             }
 
             // Si l'utilisateur retire son dislike...
@@ -203,9 +172,9 @@ exports.likeArticle = (req, res) => {
                     .then(() => {
                         res.status(200).json({message: "Informations relatives au vote utilisateur modifiées !"});
                     })
-                    .catch(error => res.status(500).json({ error }));    
+                    .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));    
                 })
-                .catch(() => res.status(400).json({ message: "Likes/Dislikes de l'article non modifiés !" }));
+                .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
             }
 
             // Si, après avoir retiré son vote, l'utilisateur soumet un like...
@@ -219,9 +188,9 @@ exports.likeArticle = (req, res) => {
                     .then(() => {
                         res.status(200).json({message: "Informations relatives au vote utilisateur modifiées !"});
                     })
-                    .catch(error => res.status(500).json({ error })); 
+                    .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
                 })
-                .catch(() => res.status(400).json({ message: "Likes/Dislikes de l'article non modifiés !" }));
+                .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
             }
 
             // Si, après avoir retiré son vote, l'utilisateur soumet un dislike...
@@ -235,12 +204,12 @@ exports.likeArticle = (req, res) => {
                     .then(() => {
                         res.status(200).json({message: "Informations relatives au vote utilisateur modifiées !"});
                     })
-                    .catch(error => res.status(500).json({ error }));    
+                    .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));    
                 })
-                .catch(() => res.status(400).json({ message: "Likes/Dislikes de l'article non modifiés !" }));
+                .catch(() => res.status(500).json({ message: "Echec de la mise à jour de la table likes !" }));
             }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(() => res.status(400).json({message: "Requête mal formulée !"}));
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(() => res.status(400).json({message: "Requête mal formulée !"}));
 };

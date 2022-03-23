@@ -1,4 +1,5 @@
 module.exports = {
+    // Définition des paramètres de la BDD
     HOST: "localhost",
     USER: "root",
     PASSWORD: "46Fta2J@k1nOs8",

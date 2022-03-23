@@ -1,8 +1,8 @@
 <template>
-  
+  <header class="header">
     <div id="nav" class="nav" >
 
-      <img class="nav__logo" alt="Logo Groupomania" src="./assets/icon-left-font-monochrome-white.svg"><br>
+      <h1><img class="nav__logo" alt="Logo Groupomania" src="./assets/icon-left-font-monochrome-white.svg"></h1><br>
 
       <router-link v-if="!this.userIsLogged" to="/signup">Inscription</router-link> 
       <span v-if="!this.userIsLogged"> | </span>
@@ -15,16 +15,21 @@
       <router-link v-if="this.userIsLogged" @click="userIsLoggingOut()" to="/">Déconnexion</router-link>
       <br><br>
       <router-link v-if="this.userIsModerator" to="/moderator">Modération</router-link>
-  </div>
+    </div>
+  </header>
+
 
   <router-view 
   @user-incoming="userStatusCheck"
   @user-account-deleted="userIsLoggingOut" 
   />
 
-  <div class="copyrights"> 
-    <p>Copyrights Groupomania, Fonkarts 2022. Made with <img src="./assets/logo.png" alt="Logo de Vue.js" class="vueLogo"></p> 
-  </div>
+  <footer class="footer">
+    <div class="copyrights"> 
+      <p>Copyrights Groupomania, Fonkarts 2022. Made with <img src="./assets/logo.png" alt="Logo de Vue.js" class="vueLogo"></p> 
+    </div>
+  </footer>
+
 </template>
 
 <script>
@@ -43,8 +48,8 @@ export default {
       moderatorIsLogged: false,
     }
   },
-
   methods: {
+    // Récupération des données de l'utilisateur depuis la réponse du login
     userStatusCheck(res) {
       this.userEmail = res.userEmail;
       this.accessToken = res.userToken;
@@ -67,20 +72,16 @@ export default {
     },
   },
   mounted() {
-    
-    // CONDITION ONLINE !!!!
+    // Récupération d'informations afin de rendre la connexion persistante
     if(localStorage.getItem("userStatus") === "Online") {
       this.userIsLogged = true;
     } else if (localStorage.getItem("userStatus") === "Offline") {
       this.userIsLogged = false;
     } 
-    //  PREMIERE CONDITION CI DESSOUS CHANGéE, LENGHT VIRé !
     if(localStorage.getItem("temp") && localStorage.getItem("userStatus") === "Online") {
       this.accessToken = localStorage.getItem("temp");
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.accessToken}`;
-    } else {
-      console.log("temp vide");
-    }
+    } 
     if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
       this.userId = JSON.parse(localStorage.getItem("userId"));
       this.username = localStorage.getItem("username");
@@ -88,10 +89,9 @@ export default {
     if(this.userIsLogged === true && localStorage.getItem("userRole") === "moderator") {
       this.userIsModerator = true;
     }
-    
-    
   },
   updated() {
+    // Récupération d'informations afin de rendre la connexion persistante
     if(localStorage.getItem("userId") && localStorage.getItem("userStatus") === "Online") {
       this.username = localStorage.getItem("username");
     }
@@ -100,12 +100,12 @@ export default {
     }
   },
   beforeUpdate() {
+    // Sauvegarde d'informations afin de rendre la connexion persistante
     if(localStorage.getItem("userStatus") === "Online") {
       localStorage.setItem("temp", this.accessToken);
     }
   },
 }
-
 </script>
 
 <style lang="scss">
@@ -114,12 +114,10 @@ export default {
 html {
   max-height: 100%;
 }
-
 body {
   margin: 0;
   padding:0;
 }
-
 .app {
   @include gradient-main;
   font-family: $font-primary, Helvetica, Arial, sans-serif;
@@ -131,24 +129,25 @@ body {
   position: relative;
 
 }
-
 .nav {
   padding: 2vw 3vw 3vw 3vw;
   background-color: #333;
   @include desktop-only {
     padding: 1.5vw 3vw 1vw 3vw;
   }
-  
-  &__logo {
-    height: 2em;
-    display: inline;
-    padding: 0 0.7em 0.5em 0;
+  & h1 {
+    height: 1em;
+    margin: 0;
+    & img {
+      height: 1em;
+      width: 6em;
+      display: inline;
+      padding: 0 0.7em 0.5em 0;
+    }
   }
-
   & span {
     color: white;
   }
-
   & a {
     font-weight: bold;
     color: white;
@@ -158,7 +157,6 @@ body {
     }
   }
 }
-
 .disclaimer {
   padding: 3vw 2vw;
   font-style: italic;
@@ -176,7 +174,6 @@ body {
   padding: 2vw 0;
   }
 }
-
 h2 {
   font-size: 1.1em;
   font-family: $font-primary;
@@ -186,24 +183,20 @@ h2 {
   width: 56vw;
   max-width: 8em;
 }
-
 .home__title {
   border-bottom: 0.1em solid white;
 }
-
 .mainContainer { // Englobe le contenu entre le nav et le footer.
   border-top: 0.2em solid white;
   padding-bottom: 5em;
   min-height: 70vh;
 }
-
 .contentContainer {
     background-color:  #333;
     color: white;
     border: 0.15em solid white;
     border-radius: 1.5em;
 }
-
 .successMsg,
 .failMsg {
     font-size: 0.8em;
@@ -220,7 +213,6 @@ h2 {
 input, label {
   margin: 0.4em auto 0.2em auto;
 }
-
 input {
   display: block;
   width: 13em;
@@ -239,14 +231,11 @@ input {
       padding: 0.5vw 1vw;
   }
 }
-
 .logSign { // Concerne les Vues "SignUp" et "LogIn"
   background-color: #333;
-
   &__mainContainer {
     @include gradient-main;
   }
-
   &__contentContainer {
     margin: 3vw auto;
     padding: 3vw 0;
@@ -261,7 +250,6 @@ input {
       width: 49vw;
     }
   }
-
   &__buttonMain {
     @include button-main;
   }
@@ -269,9 +257,6 @@ input {
     border-bottom: 0.1em solid $color-secondary;
   }
 }
-
-
-
 .copyrights {
   margin: 0 auto;
   bottom:0;
