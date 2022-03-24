@@ -54,7 +54,6 @@ export default {
             let textRegex = new RegExp("^((([A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+[ | -]{1}[A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+)+)|([A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+))$", "g", "i");
             if(textRegex.test(this.username)) {
                 userNameInput.nextElementSibling.innerText= "Nom valide";
-                console.log(this.username);
                 this.usernameChecked = true;
             } else {
                 userNameInput.nextElementSibling.innerText= "Nom invalide";

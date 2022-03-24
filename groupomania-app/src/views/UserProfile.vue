@@ -112,7 +112,6 @@ export default {
         usernameCheck: function() {
             let userNameInput = document.querySelector(".userProfile__newUsernameInput");
             let textRegex = new RegExp("^((([A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+[ | -]{1}[A-za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+)+)|([A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ']+))$", "g", "i");
-            console.log(this.modifiedUsername);
             if(textRegex.test(this.username)) {
                 userNameInput.nextElementSibling.innerHTML= "Nom valide";
                 
@@ -184,7 +183,6 @@ export default {
         // Requête de suppression de compte utilisateur
         deleteUserAccount() {
             if(localStorage.getItem("userStatus") == "Online") {
-                console.log(this.username);
                 axios.delete("http://localhost:3000/api/users/" + this.userId, {data: {
                     username: this.username
                 }})

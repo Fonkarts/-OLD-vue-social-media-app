@@ -1,6 +1,7 @@
 const db = require("../models");
 const Likes = db.likes;
 
+// Renvoie tous les votes de l'utilisateur
 exports.getAllLikesFromAnUser = (req, res) => {
     Likes.findAll({where: {userId: req.params.id}})
     .then(articlesLiked => {

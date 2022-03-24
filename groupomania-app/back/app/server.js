@@ -40,9 +40,11 @@ db.sequelize.sync(
   // .then(() => {
   // console.log("Drop et re-sync BDD");
   // initial();
-  // }
-);
+  // })
+  // .catch(error => console.log(error)
+  );
 
+// Définition de deux niveaux de privilèges
 function initial() {
   Role.create({
     id: 1,
@@ -51,10 +53,6 @@ function initial() {
   Role.create({
     id: 2,
     name: "moderator"
-  });
-  Role.create({
-    id: 3,
-    name: "admin"
   });
 }
 

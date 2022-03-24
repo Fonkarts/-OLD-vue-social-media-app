@@ -25,10 +25,10 @@ checkExistingNameOrEmail = (req, res, next) => {
 // et vérifie que le rôle en question existe bien
 checkExistingRole = (req, res, next) => {
   if (req.body.role) {
-      if (!ROLES.includes(req.body.role)) {
-        res.status(400).json({message: "Ce rôle n'existe pas = " + req.body.role});
-        return;
-      }
+    if (!ROLES.includes(req.body.role)) {
+      res.status(400).json({message: "Ce rôle n'existe pas = " + req.body.role});
+      return;
+    }
   }
   next();
 };

@@ -1,10 +1,5 @@
 const db = require("../models");
 const Comment = db.comment;
-// const User = db.user;
-// const Article = db.article; 
-// const fs = require("fs");
-// const Op = db.Sequelize.Op;
-
 
 // Crée et sauvegarde un commentaire (POST)
 exports.createComment = (req, res) => { 
@@ -61,7 +56,7 @@ exports.getOneComment = (req, res) => {
     .catch(() => res.status(404).json({message: "Commentaire non trouvé !"}));
 };
 
-// Renvoie tous les commentaires associé à un article (GETALL)
+// Renvoie tous les commentaires associés à un article (GETALL)
 exports.getAllCommentsFromAnArticle = (req, res) => { 
     Comment.findAll({where: {articleId: req.params.id}})  
     .then((comments) => res.status(200).json(comments))

@@ -38,7 +38,6 @@ export default {
   methods: {
     // Requête modérateur en vue d'obtenir l'adresse mail d'un utilisateur
     getUserMail() {
-        console.log(this.username);
         axios.get("http://localhost:3000/api/moderator/users/" + this.username)
         .then(res => {
             if(res.status == 200) {
