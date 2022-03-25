@@ -36,12 +36,12 @@ db.sequelize.sync(
   // (donc au ctrl+s avec nodemon)
   // Commentées, elles permettent une persistance des données
 
-  // {force: true})
-  // .then(() => {
-  // console.log("Drop et re-sync BDD");
-  // initial();
-  // })
-  // .catch(error => console.log(error)
+  {force: true})
+  .then(() => {
+  console.log("Drop et re-sync BDD");
+  initial();
+  })
+  .catch(error => console.log(error)
   );
 
 // Définition de deux niveaux de privilèges
