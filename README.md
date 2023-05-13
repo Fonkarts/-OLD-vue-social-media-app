@@ -4,7 +4,7 @@ PROCEDURE D'INSTALLATION (INSTALLATION STEPS, english version below)
 
 1/ DESCRIPTION
 
-GROUPOMANIA est un prototype de réseau social d'entreprise, réalisé notamment à l'aide de Vue.js, Node.js et MySQL, dans le cadre d'un projet OC.
+GROUPOMANIA est un projet de fin d'études prenant la forme d'un prototype de réseau social d'entreprise, réalisé en Vue.js, Node.js et MySQL.
 
 2/ DEPENDANCES
 
