@@ -9,24 +9,13 @@ GROUPOMANIA est un prototype de réseau social d'entreprise, réalisé notamment
 2/ DEPENDANCES
 
 BACK-END (sous Node.js 14.0, port 3000): 
-Depuis le répertoire "...\groupomania-app\back\app" utiliser la commande "npm install + nomDeLaDependanceCiDessous(numéro de version non-obligatoire)".
-- express 4.17.2
-- jsonwebtoken 8.5.1
-- sequelize 6.16.1
-- mysql2 2.3.3
-- bcrypt 5.0.1
-- cors 2.8.5
-- multer 1.4.4
+Depuis le répertoire "...\groupomania-app\back\app" utiliser la commande "npm install"
 
 optionnel :
 - nodemon (équivalent back-end de live server, redémarre votre node après chaque sauvegarde)
 
 FRONT-END (port 8080):
-Depuis le répertoire "...\groupomania-app" utiliser la commande "npm install + nomDeLaDependanceCiDessous(numéro de version non-obligatoire)".
-- vue 3.0
-- vue-router 4.0
-- @vue/cli 4.5
-- axios 0.26
+Depuis le répertoire "...\groupomania-app" utiliser la commande "npm install"
 
 Les dépendances suivantes devraient être installées automatiquement ou pendant la configuration de vue et vueCLI, vérifiez votre dossier "node-modules":
 - @vue/cli-plugin-babel 4.5 
@@ -80,24 +69,13 @@ GROUPOMANIA is a social network prototype, realised with Vue.js, Node.js and MyS
 2/ DEPENDENCIES
 
 BACK-END (with Node.js 14.0, port 3000):
-From the "...\groupomania-app\back\app" folder, use "npm install + theFollowingDepenciesNames(version numbers not needed)".
-- express 4.17.2
-- jsonwebtoken 8.5.1
-- sequelize 6.16.1
-- mysql2 2.3.3
-- bcrypt 5.0.1
-- cors 2.8.5
-- multer 1.4.4
+From the "...\groupomania-app\back\app" folder, use "npm install"
 
 optional :
 - nodemon (quite like live server for back-end, restart your node on save)
 
 FRONT-END (port 8080):
-From the "...\groupomania-app" folder, use "npm install + theFollowingDepenciesNames(version numbers not needed)".
-- vue 3.0
-- vue-router 4.0
-- @vue/cli 4.5
-- axios 0.26
+From the "...\groupomania-app" folder, use "npm install"
 
 The following dependencies should be automatically installed, or installed during vue and vueCLI configuration. Check your "node-modules" folder :
 - @vue/cli-plugin-babel 4.5 
